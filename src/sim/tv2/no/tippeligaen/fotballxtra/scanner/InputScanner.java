@@ -1,4 +1,4 @@
-package sim.tv2.no.tippeligaen.fotballxtra.parser;
+package sim.tv2.no.tippeligaen.fotballxtra.scanner;
 
 import java.util.Scanner;
 

@@ -13,6 +13,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
+import sim.tv2.no.tippeligaen.fotballxtra.scanner.InputScanner;
 
 public class DangerZoneParser {
 
@@ -65,6 +66,7 @@ public class DangerZoneParser {
 			for(String t : teamNames) {
 				teams.add(t);
 			}
+			System.out.println(teams.size() + " lag ble hentet...");
 			
 			Collections.sort(teams);
 			
