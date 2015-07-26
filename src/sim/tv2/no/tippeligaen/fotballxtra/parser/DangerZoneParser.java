@@ -25,6 +25,8 @@ public class DangerZoneParser {
 		players = new ArrayList<>();
 		teamNames = new HashSet<>();
 	}
+	
+	
 
 	
 	public void getDangerZonePlayers(String url) {
@@ -125,6 +127,18 @@ public class DangerZoneParser {
 				parser.resetTeamList();
 				parser.resetTeamNames();
 				isFinished = true;
+			} else if (response.equalsIgnoreCase("begge")) {
+				System.out.println("Henter spillere i faresonen for Tippeligaen og Obosligaen...");
+				parser.getDangerZonePlayers(tippeligaen);
+				parser.resetTeamList();
+				parser.resetTeamNames();
+				System.out.println("\n############### Ferdig med Tippeligaen #############\nHenter nå spillere fra Obosligaen...\n");
+				parser.getDangerZonePlayers(obosligaen);
+				parser.resetTeamList();
+				parser.resetTeamNames();
+				System.out.println("############### Ferdig med Obosligaen #############");
+				isFinished = true;
+				
 			} else if(response.equalsIgnoreCase("avslutt")) {
 				isFinished = true;
 			}

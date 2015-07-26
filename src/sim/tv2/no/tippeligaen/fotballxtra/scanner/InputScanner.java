@@ -11,7 +11,7 @@ public class InputScanner {
 	}
 	
 	public String input() {
-		System.out.println("Ønsker du faresonen for tippeligaen eller obosligaen?");
+		System.out.println("Ønsker du faresonen for tippeligaen eller obosligaen?\nØnsker du for begge kan du skrive \"begge\".");
 		System.out.println("Ønsker du å avslutt så skriv \"avslutt\"");
 		String response = input.nextLine();
 		return response;
