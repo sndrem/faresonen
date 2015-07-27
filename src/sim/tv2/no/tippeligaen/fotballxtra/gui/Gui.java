@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
 public class Gui extends JFrame {
 	
@@ -26,7 +27,6 @@ public class Gui extends JFrame {
 	private JEditorPane textArea;
 	private Clipboard clipBoard;
 	private JLabel infoLabel;
-	
 	
 	
 	private Gui() {
@@ -68,13 +68,14 @@ public class Gui extends JFrame {
 		
 		this.add(scrollPane, BorderLayout.CENTER);
 		
-		JPanel bottomPanel = new JPanel();
+		JPanel bottomPanel = new JPanel(new BorderLayout());
 		
-		bottomPanel.add(copyButton);
-		
+		bottomPanel.add(copyButton, BorderLayout.EAST);
+			
 		infoLabel = new JLabel("");
-		bottomPanel.add(infoLabel);
+		bottomPanel.add(infoLabel, BorderLayout.WEST);
 		
+		bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.add(bottomPanel, BorderLayout.SOUTH);
 		
 		this.setLocationRelativeTo(null);

@@ -82,12 +82,10 @@ public class DangerZoneParser {
 				teams.add(t);
 			}
 			System.out.println(teams.size() + " lag ble hentet...");
-			gui.getInfoLabel().setText(teams.size() + " lag ble hentet");
 			
 			Collections.sort(teams);
 			
 			for(String teamName : teams) {
-//				System.out.println("<br/>" + teamName + "</b>");
 				information += "<br/><b>" + teamName + "</b>";
 				for(Player play : players) {
 					if(isEvenNumber(play.getYellowCards()) && play.getTeam().equalsIgnoreCase(teamName)){
@@ -98,6 +96,7 @@ public class DangerZoneParser {
 				information += "<br/>";
 			}
 	
+			gui.getInfoLabel().setText(teams.size() + " lag og " + players.size() + " spillere ble hentet");
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
