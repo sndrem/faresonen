@@ -34,7 +34,8 @@ public class EventHandler implements ActionListener {
 		}  else if (e.getSource() == gui.getCopyButton()) {
 			
 			gui.getTextArea().selectAll();
-			gui.getTextArea().requestFocusInWindow();		
+			gui.getTextArea().requestFocusInWindow();
+			
 		}
 		
 		

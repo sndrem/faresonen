@@ -1,6 +1,11 @@
 package sim.tv2.no.tippeligaen.fotballxtra.parser;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,10 +17,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import sim.tv2.no.tippeligaen.fotballxtra.HTMLParser.HtmlConverter;
 import sim.tv2.no.tippeligaen.fotballxtra.actionListeners.EventHandler;
 import sim.tv2.no.tippeligaen.fotballxtra.gui.Gui;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
-import sim.tv2.no.tippeligaen.fotballxtra.scanner.InputScanner;
 
 public class DangerZoneParser {
 
@@ -23,12 +28,14 @@ public class DangerZoneParser {
 	private List<Player> players;
 	private HashSet<String> teamNames;
 	private List<String> teams;
+	private HtmlConverter parser;
 	
 	public DangerZoneParser() {
-		players = new ArrayList<>();
-		teamNames = new HashSet<>();
+		players = new ArrayList<Player>();
+		teamNames = new HashSet<String>();
 		gui = Gui.getInstance();
 		setupActionListeners();
+		parser = new HtmlConverter();
 	}
 	
 	private void setupActionListeners() {
@@ -77,7 +84,7 @@ public class DangerZoneParser {
 		        }
 		    });
 			
-			teams = new ArrayList<>();
+			teams = new ArrayList<String>();
 			for(String t : teamNames) {
 				teams.add(t);
 			}
@@ -119,42 +126,26 @@ public class DangerZoneParser {
 		} else return false;
 	}
 	
+	public void copyText(String htmlText) {
+		
+		try {
+			parser.parse(new StringReader(htmlText));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String data = parser.getText();
+		StringSelection stringSelection = new StringSelection(data);
+		Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipBoard.setContents(stringSelection, null);
+	}
+	
+	
+	
 	
 	
 	public static void main(String[] args) {
-		DangerZoneParser parser = new DangerZoneParser();
-		String tippeligaen = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=1&seasonId=&teamId=";
-		String obosligaen = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=2&seasonId=&teamId=";
-		
-		InputScanner input = new InputScanner();
-		String response = input.input();
-		boolean isFinished = false;
-		
-		while(!isFinished) {
-			if(response.equalsIgnoreCase("tippeligaen")) {
-				parser.getDangerZonePlayers(tippeligaen);
-				parser.reset();
-				isFinished = true;
-				
-			} else if (response.equalsIgnoreCase("obosligaen")) {
-				parser.getDangerZonePlayers(obosligaen);
-				parser.reset();
-				isFinished = true;
-			} else if (response.equalsIgnoreCase("begge")) {
-				System.out.println("Henter spillere i faresonen for Tippeligaen og Obosligaen...");
-				parser.getDangerZonePlayers(tippeligaen);
-				parser.reset();
-				System.out.println("\n############### Ferdig med Tippeligaen #############\nHenter nå spillere fra Obosligaen...\n");
-				parser.getDangerZonePlayers(obosligaen);
-				parser.reset();
-				System.out.println("############### Ferdig med Obosligaen #############");
-				isFinished = true;
-				
-			} else if(response.equalsIgnoreCase("avslutt")) {
-				isFinished = true;
-			}
-		}
-		
+		new DangerZoneParser();	
 	}
 
 }
