@@ -5,6 +5,8 @@ public class Match {
 	private String matchDate, homeTeam, awayTeam, tournament, time, channels, round; 
 	
 	private String referee, arena;
+	
+	// TODO Lagre url for kampene slik at vi kan direkte til de
 
 	public Match(String matchDate, String round, String homeTeam, String awayTeam,
 			String tournament, String time, String channels) {
