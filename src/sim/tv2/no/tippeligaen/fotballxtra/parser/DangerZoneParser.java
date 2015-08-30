@@ -21,6 +21,7 @@ import org.jsoup.select.Elements;
 import sim.tv2.no.tippeligaen.fotballxtra.HTMLParser.HtmlConverter;
 import sim.tv2.no.tippeligaen.fotballxtra.actionListeners.EventHandler;
 import sim.tv2.no.tippeligaen.fotballxtra.gui.Gui;
+import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
 
 public class DangerZoneParser {
@@ -29,12 +30,11 @@ public class DangerZoneParser {
 	private List<Player> players;
 	private HashSet<String> teamNames;
 	private List<String> teams;
-	private HtmlConverter parser;
+	private List<Match> matchList;
 	
 	public static void main(String[] args) {
 		DangerZoneParser parser = new DangerZoneParser();
-		parser.getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
-		
+//		parser.getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
 		
 	}
 	
@@ -42,9 +42,14 @@ public class DangerZoneParser {
 	public DangerZoneParser() {
 		players = new ArrayList<Player>();
 		teamNames = new HashSet<String>();
+		matchList = new ArrayList<Match>();
+		getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
+		for(Match m : matchList) {
+			System.out.println(m);
+		}
+		
 //		gui = Gui.getInstance();
 //		setupActionListeners();
-		parser = new HtmlConverter();
 	}
 	
 	private void setupActionListeners() {
@@ -59,17 +64,29 @@ public class DangerZoneParser {
 		try {
 			Document doc = Jsoup.connect(url).get();
 			Elements nextMatches = doc.getElementsByAttributeValue("id", "sd_fixtures_table_next");
-//			System.out.println(nextMatches);
 			
 			Elements matches = nextMatches.get(0).getElementsByTag("tr");
-//			Elements matchRound = nextMatches.get(0).getElementsByClass("sd_fixtures_round");
-//			Elements matchTournament = nextMatches.get(0).getElementsByClass("sd_fixtures_tournament");
-//			Elements matchHomeTeam = nextMatches.get(0).getElementsByClass("sd_fixtures_home");
-//			Elements matchTime = nextMatches.get(0).getElementsByClass("sd_fixtures_score");
-//			Elements matchAwayTeam = nextMatches.get(0).getElementsByClass("sd_fixtures_away");
-//			Elements matchChannel = nextMatches.get(0).getElementsByClass("sd_fixtures_channel");
+//			
+			for(Element match : matches) {
+				String date = match.getElementsByClass("sd_fixtures_date").text();
+				String firstDate = matches.get(0).getElementsByClass("sd_fixtures_date").text();
+				String round = match.getElementsByClass("sd_fixtures_round").text();
+				String tournament = match.getElementsByClass("sd_fixtures_tournament").text();
+				String homeTeam = match.getElementsByClass("sd_fixtures_home").text();
+				String awayTeam = match.getElementsByClass("sd_fixtures_away").text();
+				String time = match.getElementsByClass("sd_fixtures_score").text();
+				String channels = match.getElementsByClass("sd_fixtures_channels").text();
+						
+				// Has to check for non breaking space if several matches are played on the same date
+				if(date.equalsIgnoreCase("\u00a0")) {
+					Match matchToList = new Match(firstDate, round, homeTeam, awayTeam, tournament, time.split(" ")[0], channels);
+					matchList.add(matchToList);
+				} else {
+					Match matchToList = new Match(date, round, homeTeam, awayTeam, tournament, time.split(" ")[0], channels);
+					matchList.add(matchToList);
+				}
+			}
 			
-			System.out.println(matches);
 						
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
