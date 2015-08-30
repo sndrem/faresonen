@@ -2,6 +2,7 @@ package sim.tv2.no.tippeligaen.fotballxtra.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 
@@ -12,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.html.HTMLDocument;
 
 public class Gui extends JFrame {
 	
@@ -63,6 +65,12 @@ public class Gui extends JFrame {
 		textArea = new JEditorPane("text/html", "");
 		textArea.setEditable(false);
 		textArea.setSize(new Dimension(500, 500));
+		
+		Font font = new Font("Sans Gill MT", Font.PLAIN, 11);
+	    String bodyRule = "body { font-family: " + font.getName() + ", \"Sans-Serif\"; " +
+	            "font-size: " + font.getSize() + "pt; }";
+	    ((HTMLDocument)textArea.getDocument()).getStyleSheet().addRule(bodyRule);
+		
 		
 		JScrollPane scrollPane = new JScrollPane(textArea);
 		
