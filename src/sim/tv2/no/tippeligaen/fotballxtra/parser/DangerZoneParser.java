@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -30,11 +31,19 @@ public class DangerZoneParser {
 	private List<String> teams;
 	private HtmlConverter parser;
 	
+	public static void main(String[] args) {
+		DangerZoneParser parser = new DangerZoneParser();
+		parser.getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
+		
+		
+	}
+	
+	
 	public DangerZoneParser() {
 		players = new ArrayList<Player>();
 		teamNames = new HashSet<String>();
-		gui = Gui.getInstance();
-		setupActionListeners();
+//		gui = Gui.getInstance();
+//		setupActionListeners();
 		parser = new HtmlConverter();
 	}
 	
@@ -45,6 +54,29 @@ public class DangerZoneParser {
 		gui.getCopyButton().addActionListener(e);
 	}
 	
+	
+	public void getNextMatches(String url) {
+		try {
+			Document doc = Jsoup.connect(url).get();
+			Elements nextMatches = doc.getElementsByAttributeValue("id", "sd_fixtures_table_next");
+//			System.out.println(nextMatches);
+			
+			Elements matches = nextMatches.get(0).getElementsByTag("tr");
+//			Elements matchRound = nextMatches.get(0).getElementsByClass("sd_fixtures_round");
+//			Elements matchTournament = nextMatches.get(0).getElementsByClass("sd_fixtures_tournament");
+//			Elements matchHomeTeam = nextMatches.get(0).getElementsByClass("sd_fixtures_home");
+//			Elements matchTime = nextMatches.get(0).getElementsByClass("sd_fixtures_score");
+//			Elements matchAwayTeam = nextMatches.get(0).getElementsByClass("sd_fixtures_away");
+//			Elements matchChannel = nextMatches.get(0).getElementsByClass("sd_fixtures_channel");
+			
+			System.out.println(matches);
+						
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 
 	
@@ -88,7 +120,7 @@ public class DangerZoneParser {
 			for(String t : teamNames) {
 				teams.add(t);
 			}
-			System.out.println(teams.size() + " lag ble hentet...");
+
 			
 			Collections.sort(teams);
 			
@@ -96,7 +128,6 @@ public class DangerZoneParser {
 				information += "<br/><b>" + teamName + "</b>";
 				for(Player play : players) {
 					if(isEvenNumber(play.getYellowCards()) && play.getTeam().equalsIgnoreCase(teamName)){
-						System.out.println(play);
 						information += "<br/>" + play;
 					}
 				}
@@ -126,26 +157,7 @@ public class DangerZoneParser {
 		} else return false;
 	}
 	
-	public void copyText(String htmlText) {
-		
-		try {
-			parser.parse(new StringReader(htmlText));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String data = parser.getText();
-		StringSelection stringSelection = new StringSelection(data);
-		Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		clipBoard.setContents(stringSelection, null);
-	}
 	
 	
-	
-	
-	
-	public static void main(String[] args) {
-		new DangerZoneParser();	
-	}
 
 }
