@@ -39,9 +39,7 @@ public class DangerZoneParser {
 		teamNames = new HashSet<String>();
 		matchList = new ArrayList<Match>();
 		getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
-		
-		Collections.sort(matchList);
-		
+				
 		for(Match m : matchList) {
 			System.out.println(m);
 		}
@@ -88,8 +86,8 @@ public class DangerZoneParser {
 				
 				while(regexMatcher.find()) {
 					if(regexMatcher.group().length() != 0) {
-						String newString = regexMatcher.group().replaceAll(" Assistentdommere:", "");
-						System.out.println(newString);
+						String referee = regexMatcher.group().replaceAll(" Assistentdommere:", "");
+						System.out.println(referee);
 					}
 				}
 								
