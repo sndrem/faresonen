@@ -1,24 +1,19 @@
 package sim.tv2.no.tippeligaen.fotballxtra.parser;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import sim.tv2.no.tippeligaen.fotballxtra.HTMLParser.HtmlConverter;
 import sim.tv2.no.tippeligaen.fotballxtra.actionListeners.EventHandler;
 import sim.tv2.no.tippeligaen.fotballxtra.gui.Gui;
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
@@ -44,6 +39,9 @@ public class DangerZoneParser {
 		teamNames = new HashSet<String>();
 		matchList = new ArrayList<Match>();
 		getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
+		
+		Collections.sort(matchList);
+		
 		for(Match m : matchList) {
 			System.out.println(m);
 		}
@@ -66,24 +64,50 @@ public class DangerZoneParser {
 			Elements nextMatches = doc.getElementsByAttributeValue("id", "sd_fixtures_table_next");
 			
 			Elements matches = nextMatches.get(0).getElementsByTag("tr");
-//			
+		
 			for(Element match : matches) {
 				String date = match.getElementsByClass("sd_fixtures_date").text();
-				String firstDate = matches.get(0).getElementsByClass("sd_fixtures_date").text();
+//				String firstDate = matches.get(2).getElementsByClass("sd_fixtures_date").text();
 				String round = match.getElementsByClass("sd_fixtures_round").text();
 				String tournament = match.getElementsByClass("sd_fixtures_tournament").text();
 				String homeTeam = match.getElementsByClass("sd_fixtures_home").text();
 				String awayTeam = match.getElementsByClass("sd_fixtures_away").text();
 				String time = match.getElementsByClass("sd_fixtures_score").text();
 				String channels = match.getElementsByClass("sd_fixtures_channels").text();
+				
+				String matchUrl = "http://altomfotball.no/" + match.getElementsByClass("sd_fixtures_score").tagName("a").attr("href");
+				Document matchPage = Jsoup.connect(matchUrl).get();
+				
+				// TODO Hent ut bare dommeren
+				Elements arenas = matchPage.select(".sd_game_small").select(".sd_game_home");
+				Element matchDetails = matchPage.getElementById("sd_match_details");
+				Elements refs = matchDetails.select("#sd_match_details > table > tbody > tr > td:nth-child(2) > p");
+				
+				Pattern regexPattern = Pattern.compile("(.{1}).*?Assistentdommere:");
+				Matcher regexMatcher = regexPattern.matcher(refs.text());
+				
+				while(regexMatcher.find()) {
+					if(regexMatcher.group().length() != 0) {
+						String newString = regexMatcher.group().replaceAll(" Assistentdommere:", "");
+						System.out.println(newString);
+					}
+				}
+								
+				String[] arenaText = null;
+				for(Element arena : arenas) {
+					arenaText = arena.text().split(" ");
+					
+				}
 						
 				// Has to check for non breaking space if several matches are played on the same date
 				if(date.equalsIgnoreCase("\u00a0")) {
-					Match matchToList = new Match(firstDate, round, homeTeam, awayTeam, tournament, time.split(" ")[0], channels);
+					Match matchToList = new Match(date, homeTeam, awayTeam, tournament, time.split(" ")[0], channels, round);
+					matchToList.setArena(arenaText[0] + " " + arenaText[1]);
 					matchList.add(matchToList);
 				} else {
-					Match matchToList = new Match(date, round, homeTeam, awayTeam, tournament, time.split(" ")[0], channels);
+					Match matchToList = new Match(date, homeTeam, awayTeam, tournament, time.split(" ")[0], channels, round);
 					matchList.add(matchToList);
+					matchToList.setArena(arenaText[0] + " " + arenaText[1]);
 				}
 			}
 			

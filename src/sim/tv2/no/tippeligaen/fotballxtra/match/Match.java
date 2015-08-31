@@ -1,24 +1,13 @@
 package sim.tv2.no.tippeligaen.fotballxtra.match;
 
-public class Match {
+public class Match implements Comparable {
 
-	private String matchDate, homeTeam, awayTeam, tournament, time, channels, round; 
+	private String matchDate, homeTeam, awayTeam, tournament, time, channels, round, referee, arena, matchUrl; 
 	
-	private String referee, arena;
 	
 	// TODO Lagre url for kampene slik at vi kan direkte til de
 
-	public Match(String matchDate, String round, String homeTeam, String awayTeam,
-			String tournament, String time, String channels) {
-		this.matchDate = matchDate;
-		this.round = round;
-		this.homeTeam = homeTeam;
-		this.awayTeam = awayTeam;
-		this.tournament = tournament;
-		this.time = time;
-		this.channels = channels;
-//		this.arena = arena;
-	}
+
 
 	/**
 	 * @return the matchDate
@@ -26,6 +15,19 @@ public class Match {
 	public String getMatchDate() {
 		return matchDate;
 	}
+
+
+	public Match(String matchDate, String homeTeam, String awayTeam,
+			String tournament, String time, String channels, String round) {
+		this.matchDate = matchDate;
+		this.homeTeam = homeTeam;
+		this.awayTeam = awayTeam;
+		this.tournament = tournament;
+		this.time = time;
+		this.channels = channels;
+		this.round = round;
+	}
+
 
 	/**
 	 * @param matchDate the matchDate to set
@@ -151,4 +153,24 @@ public class Match {
 		this.round = round;
 	}
 
+	/**
+	 * @return the matchUrl
+	 */
+	public String getMatchUrl() {
+		return matchUrl;
+	}
+
+	/**
+	 * @param matchUrl the matchUrl to set
+	 */
+	public void setMatchUrl(String matchUrl) {
+		this.matchUrl = matchUrl;
+	}
+
+
+	@Override
+	public int compareTo(Object o) {
+		Match matchToCompare = (Match) o;
+		return this.matchDate.compareTo(matchToCompare.getMatchDate());
+	}
 }
