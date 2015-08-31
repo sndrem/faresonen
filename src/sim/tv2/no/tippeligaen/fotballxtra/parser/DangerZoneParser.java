@@ -84,10 +84,10 @@ public class DangerZoneParser {
 				Pattern regexPattern = Pattern.compile("(.{1}).*?Assistentdommere:");
 				Matcher regexMatcher = regexPattern.matcher(refs.text());
 				
+				String referee = "";
 				while(regexMatcher.find()) {
 					if(regexMatcher.group().length() != 0) {
-						String referee = regexMatcher.group().replaceAll(" Assistentdommere:", "");
-						System.out.println(referee);
+						referee = regexMatcher.group().replaceAll(" Assistentdommere:", "");
 					}
 				}
 								
@@ -101,11 +101,13 @@ public class DangerZoneParser {
 				if(date.equalsIgnoreCase("\u00a0")) {
 					Match matchToList = new Match(date, homeTeam, awayTeam, tournament, time.split(" ")[0], channels, round);
 					matchToList.setArena(arenaText[0] + " " + arenaText[1]);
+					matchToList.setReferee(referee);
 					matchList.add(matchToList);
 				} else {
 					Match matchToList = new Match(date, homeTeam, awayTeam, tournament, time.split(" ")[0], channels, round);
 					matchList.add(matchToList);
 					matchToList.setArena(arenaText[0] + " " + arenaText[1]);
+					matchToList.setReferee(referee);
 				}
 			}
 			

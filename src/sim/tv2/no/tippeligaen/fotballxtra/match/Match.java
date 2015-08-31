@@ -135,7 +135,7 @@ public class Match implements Comparable {
 	}
 	
 	public String toString() {
-		String info = "Den " + matchDate + " på " + arena + " skal " + homeTeam + " spille " + round + " mot " + awayTeam + " kl. " + time + ". Kampen ser du på " + channels;
+		String info = "Den " + matchDate + " på " + arena + " skal " + homeTeam + " spille " + round + " mot " + awayTeam + " kl. " + time + ". Kampen ser du på " + channels + " den dømmes av " + referee;
 		return info;
 	}
 
