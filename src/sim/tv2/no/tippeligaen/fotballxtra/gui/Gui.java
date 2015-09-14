@@ -6,29 +6,28 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JTextArea;
 import javax.swing.text.html.HTMLDocument;
 
 public class Gui extends JFrame {
 	
 	private static Gui instance;
 	
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8541053030310624190L;
 	
 	private JButton tippeligaButton, obosButton, copyButton;
 	private JEditorPane textArea;
 	private Clipboard clipBoard;
 	private JLabel infoLabel;
+	private JButton searchButton;
+	private JTextArea searchField;
 	
 	
 	private Gui() {
@@ -50,7 +49,7 @@ public class Gui extends JFrame {
 		copyButton = new JButton("Marker alle spillere");
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(new Dimension(800,800));
+		this.setSize(new Dimension(1000,1000));
 		this.setTitle("Faresonen");
 		
 		this.setLayout(new BorderLayout());
@@ -77,13 +76,25 @@ public class Gui extends JFrame {
 		this.add(scrollPane, BorderLayout.CENTER);
 		
 		JPanel bottomPanel = new JPanel(new BorderLayout());
+		JPanel bottomControlPanel = new JPanel(new BorderLayout());
+		bottomPanel.add(bottomControlPanel, BorderLayout.NORTH);
 		
-		bottomPanel.add(copyButton, BorderLayout.EAST);
+		bottomControlPanel.add(copyButton, BorderLayout.EAST);
 			
 		infoLabel = new JLabel("");
 		bottomPanel.add(infoLabel, BorderLayout.WEST);
 		
-		bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+		searchButton = new JButton("Søk");
+		searchButton.setEnabled(false);
+		bottomControlPanel.add(searchButton, BorderLayout.CENTER);
+		
+		searchField = new JTextArea(1,40);
+		searchField.setBorder(BorderFactory.createTitledBorder("Søk etter spiller"));
+		bottomControlPanel.add(searchField, BorderLayout.WEST);
+		
+		
+		
+//		bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.add(bottomPanel, BorderLayout.SOUTH);
 		
 		this.setLocationRelativeTo(null);
@@ -174,6 +185,34 @@ public class Gui extends JFrame {
 	 */
 	public void setInfoLabel(JLabel infoLabel) {
 		this.infoLabel = infoLabel;
+	}
+
+	/**
+	 * @return the searchButton
+	 */
+	public JButton getSearchButton() {
+		return searchButton;
+	}
+
+	/**
+	 * @param searchButton the searchButton to set
+	 */
+	public void setSearchButton(JButton searchButton) {
+		this.searchButton = searchButton;
+	}
+
+	/**
+	 * @return the searchField
+	 */
+	public JTextArea getSearchField() {
+		return searchField;
+	}
+
+	/**
+	 * @param searchField the searchField to set
+	 */
+	public void setSearchField(JTextArea searchField) {
+		this.searchField = searchField;
 	}
 
 	

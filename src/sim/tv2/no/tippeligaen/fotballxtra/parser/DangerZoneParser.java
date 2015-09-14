@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JOptionPane;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -38,14 +40,16 @@ public class DangerZoneParser {
 		players = new ArrayList<Player>();
 		teamNames = new HashSet<String>();
 		matchList = new ArrayList<Match>();
-		getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
+		teams = new ArrayList<String>();
+//		getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
 				
 		for(Match m : matchList) {
 			System.out.println(m);
 		}
 		
-//		gui = Gui.getInstance();
-//		setupActionListeners();
+		gui = Gui.getInstance();
+		setupActionListeners();
+		
 	}
 	
 	private void setupActionListeners() {
@@ -53,6 +57,7 @@ public class DangerZoneParser {
 		gui.getObosButton().addActionListener(e);
 		gui.getTippeligaButton().addActionListener(e);
 		gui.getCopyButton().addActionListener(e);
+		gui.getSearchButton().addActionListener(e);
 	}
 	
 	
@@ -119,7 +124,20 @@ public class DangerZoneParser {
 		
 	}
 	
-
+	public void searchPlayer(String searchText) {
+		if(players.size() < 1) {
+			JOptionPane.showMessageDialog(gui, "Last ned spillere før du kan søke");
+		} else {
+			for(Player play : players) {
+				if(play.getName().toLowerCase().contains(searchText)) {
+					System.out.println(play.getName() + " er i faresonen med " + play.getYellowCards() + " gule kort.");
+				} else {
+					
+				}
+			}
+		}
+	}
+	
 	
 	public String getDangerZonePlayers(String url) {
 		String information = "";
@@ -181,7 +199,7 @@ public class DangerZoneParser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return information;
 	}
 	
