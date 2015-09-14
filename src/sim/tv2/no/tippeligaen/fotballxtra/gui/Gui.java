@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.html.HTMLDocument;
+import java.awt.Color;
+import javax.swing.JSplitPane;
 
 public class Gui extends JFrame {
 	
@@ -28,6 +30,7 @@ public class Gui extends JFrame {
 	private JLabel infoLabel;
 	private JButton searchButton;
 	private JTextArea searchField;
+	private JPanel panel;
 	
 	
 	private Gui() {
@@ -52,28 +55,32 @@ public class Gui extends JFrame {
 		this.setSize(new Dimension(1000,1000));
 		this.setTitle("Faresonen");
 		
-		this.setLayout(new BorderLayout());
+		getContentPane().setLayout(new BorderLayout());
 		
 		JPanel buttonPanel = new JPanel();
 		
 		buttonPanel.add(tippeligaButton);
 		buttonPanel.add(obosButton);
 		
-		this.add(buttonPanel, BorderLayout.NORTH);
-		
-		textArea = new JEditorPane("text/html", "");
-		textArea.setEditable(false);
-		textArea.setSize(new Dimension(500, 500));
+		getContentPane().add(buttonPanel, BorderLayout.NORTH);
 		
 		Font font = new Font("Sans Gill MT", Font.PLAIN, 11);
 	    String bodyRule = "body { font-family: " + font.getName() + ", \"Sans-Serif\"; " +
 	            "font-size: " + font.getSize() + "pt; }";
-	    ((HTMLDocument)textArea.getDocument()).getStyleSheet().addRule(bodyRule);
+		
+		panel = new JPanel();
+		getContentPane().add(panel, BorderLayout.CENTER);
+		
+		textArea = new JEditorPane("text/html", "");
+		textArea.setBackground(Color.WHITE);
+		textArea.setEditable(false);
+		textArea.setSize(new Dimension(500, 500));
+		((HTMLDocument)textArea.getDocument()).getStyleSheet().addRule(bodyRule);
+		panel.setLayout(new BorderLayout(0, 0));
 		
 		
 		JScrollPane scrollPane = new JScrollPane(textArea);
-		
-		this.add(scrollPane, BorderLayout.CENTER);
+		panel.add(scrollPane, BorderLayout.CENTER);
 		
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		JPanel bottomControlPanel = new JPanel(new BorderLayout());
@@ -95,7 +102,7 @@ public class Gui extends JFrame {
 		
 		
 //		bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-		this.add(bottomPanel, BorderLayout.SOUTH);
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);

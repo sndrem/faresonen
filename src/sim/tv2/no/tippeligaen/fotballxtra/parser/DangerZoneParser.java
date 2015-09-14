@@ -17,13 +17,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import sim.tv2.no.tippeligaen.fotballxtra.actionListeners.EventHandler;
-import sim.tv2.no.tippeligaen.fotballxtra.gui.Gui;
+import sim.tv2.no.tippeligaen.fotballxtra.gui.RealGui;
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
 
 public class DangerZoneParser {
 
-	private Gui gui;
+	private RealGui gui;
 	private List<Player> players;
 	private HashSet<String> teamNames;
 	private List<String> teams;
@@ -47,17 +47,16 @@ public class DangerZoneParser {
 			System.out.println(m);
 		}
 		
-		gui = Gui.getInstance();
+		gui = RealGui.getInstance();
 		setupActionListeners();
 		
 	}
 	
 	private void setupActionListeners() {
 		EventHandler e = new EventHandler(this);
-		gui.getObosButton().addActionListener(e);
-		gui.getTippeligaButton().addActionListener(e);
-		gui.getCopyButton().addActionListener(e);
-		gui.getSearchButton().addActionListener(e);
+		gui.getGetObosligaenButton().addActionListener(e);
+		gui.getGetTippeligaButton().addActionListener(e);
+		gui.getSearchPlayerButton().addActionListener(e);
 	}
 	
 	
@@ -124,18 +123,22 @@ public class DangerZoneParser {
 		
 	}
 	
-	public void searchPlayer(String searchText) {
+	public List<Player> searchPlayer(String searchText) {
+		List<Player> playList = new ArrayList<Player>();
+		
 		if(players.size() < 1) {
-			JOptionPane.showMessageDialog(gui, "Last ned spillere før du kan søke");
+			JOptionPane.showMessageDialog(gui.getFrame(), "Last ned spillere før du kan søke");
 		} else {
 			for(Player play : players) {
 				if(play.getName().toLowerCase().contains(searchText)) {
 					System.out.println(play.getName() + " er i faresonen med " + play.getYellowCards() + " gule kort.");
+					playList.add(play);
 				} else {
 					
 				}
 			}
 		}
+		return playList;
 	}
 	
 	
@@ -164,7 +167,9 @@ public class DangerZoneParser {
 				String average = playerData[5];
 				teamNames.add(team);
 				Player player = new Player(number, name, team, yellowCards, matches, average);
-				players.add(player);
+				if(isEvenNumber(player.getYellowCards())) {
+					players.add(player);
+				}
 			}
 			
 			Collections.sort(players, new Comparator<Player>() {
