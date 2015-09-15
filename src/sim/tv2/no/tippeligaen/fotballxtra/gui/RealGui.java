@@ -1,23 +1,21 @@
 package sim.tv2.no.tippeligaen.fotballxtra.gui;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import java.awt.Dimension;
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import javax.swing.JButton;
-import javax.swing.JSplitPane;
-import javax.swing.JEditorPane;
-import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
-import javax.swing.border.EtchedBorder;
 import java.awt.Color;
-import javax.swing.JTextField;
 import java.awt.Component;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.Dimension;
+import java.awt.Point;
+
+import javax.swing.JButton;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 public class RealGui {
 
@@ -33,6 +31,7 @@ public class RealGui {
 	private JLabel infoLabel;
 	private JPanel panel;
 	private JPanel infoPanel;
+	private JButton loadAllPlayersButton;
 
 	/**
 	 * Launch the application.
@@ -69,7 +68,7 @@ public class RealGui {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setSize(new Dimension(1000, 1000));
+		frame.setSize(new Dimension(1500, 1000));
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -86,6 +85,9 @@ public class RealGui {
 		getObosligaenButton = new JButton("OBOS-ligaen");
 		panel.add(getObosligaenButton);
 		
+		setLoadAllPlayersButton(new JButton("Last alle spillere"));
+		panel.add(getLoadAllPlayersButton());
+		
 		infoPanel = new JPanel();
 		buttonPanel.add(infoPanel, BorderLayout.SOUTH);
 		
@@ -97,10 +99,9 @@ public class RealGui {
 		dangerZoneEditorPane.setSize(new Dimension(500, 500));
 		
 		JScrollPane dangerZoneScrollPane = new JScrollPane(dangerZoneEditorPane);
-		dangerZoneScrollPane.setSize(new Dimension(150, 150));
-		dangerZoneScrollPane.setPreferredSize(new Dimension(17, 17));
+		dangerZoneScrollPane.setSize(new Dimension(350, 350));
+		dangerZoneScrollPane.setPreferredSize(new Dimension(750, 750));
 		dangerZoneScrollPane.setViewportBorder(new TitledBorder(null, "Spillere i faresonen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		
 		
 		summaryEditorPane = new JEditorPane("text/html", "");
 		
@@ -112,6 +113,7 @@ public class RealGui {
 		splitPane.setAlignmentY(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
 		splitPane.setDividerLocation(0.5);
+		splitPane.setOneTouchExpandable(true);
 		
 		JPanel searchPanel = new JPanel();
 		frame.getContentPane().add(searchPanel, BorderLayout.SOUTH);
@@ -123,8 +125,10 @@ public class RealGui {
 		searchPlayerButton = new JButton("Søk etter spiller(e)");
 		searchPlayerButton.setEnabled(false);
 		searchPanel.add(searchPlayerButton);
+		frame.getRootPane().setDefaultButton(searchPlayerButton);
 		
 		frame.setVisible(true);
+	
 	}
 
 	/**
@@ -237,6 +241,20 @@ public class RealGui {
 	 */
 	public void setInfoLabel(JLabel infoLabel) {
 		this.infoLabel = infoLabel;
+	}
+
+	/**
+	 * @return the loadAllPlayersButton
+	 */
+	public JButton getLoadAllPlayersButton() {
+		return loadAllPlayersButton;
+	}
+
+	/**
+	 * @param loadAllPlayersButton the loadAllPlayersButton to set
+	 */
+	public void setLoadAllPlayersButton(JButton loadAllPlayersButton) {
+		this.loadAllPlayersButton = loadAllPlayersButton;
 	}
 
 }

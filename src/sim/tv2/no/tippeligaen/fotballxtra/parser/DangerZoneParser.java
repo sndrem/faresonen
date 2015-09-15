@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,10 +38,10 @@ public class DangerZoneParser {
 	
 	
 	public DangerZoneParser() {
-		players = new ArrayList<Player>();
-		teamNames = new HashSet<String>();
+		setPlayers(new ArrayList<Player>());
+		setTeamNames(new HashSet<String>());
 		matchList = new ArrayList<Match>();
-		teams = new ArrayList<String>();
+		setTeams(new ArrayList<String>());
 //		getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
 				
 		for(Match m : matchList) {
@@ -57,6 +58,7 @@ public class DangerZoneParser {
 		gui.getGetObosligaenButton().addActionListener(e);
 		gui.getGetTippeligaButton().addActionListener(e);
 		gui.getSearchPlayerButton().addActionListener(e);
+		gui.getLoadAllPlayersButton().addActionListener(e);
 	}
 	
 	
@@ -123,15 +125,15 @@ public class DangerZoneParser {
 		
 	}
 	
-	public List<Player> searchPlayer(String searchText) {
-		List<Player> playList = new ArrayList<Player>();
+	public Set<Player> searchPlayer(String searchText) {
+		Set<Player> playList = new HashSet<Player>();
 		
-		if(players.size() < 1) {
+		if(getPlayers().size() < 1) {
 			JOptionPane.showMessageDialog(gui.getFrame(), "Last ned spillere før du kan søke");
 		} else {
-			for(Player play : players) {
+			for(Player play : getPlayers()) {
 				if(play.getName().toLowerCase().contains(searchText)) {
-					System.out.println(play.getName() + " er i faresonen med " + play.getYellowCards() + " gule kort.");
+//					System.out.println(play.getName() + " er i faresonen med " + play.getYellowCards() + " gule kort.");
 					playList.add(play);
 				} else {
 					
@@ -165,14 +167,14 @@ public class DangerZoneParser {
 				int yellowCards = Integer.parseInt(playerData[3]);
 				int matches = Integer.parseInt(playerData[4]);
 				String average = playerData[5];
-				teamNames.add(team);
+				getTeamNames().add(team);
 				Player player = new Player(number, name, team, yellowCards, matches, average);
 				if(isEvenNumber(player.getYellowCards())) {
-					players.add(player);
+					getPlayers().add(player);
 				}
 			}
 			
-			Collections.sort(players, new Comparator<Player>() {
+			Collections.sort(getPlayers(), new Comparator<Player>() {
 		        @Override
 		        public int compare(Player player1, Player player2){
 
@@ -180,25 +182,25 @@ public class DangerZoneParser {
 		        }
 		    });
 			
-			teams = new ArrayList<String>();
-			for(String t : teamNames) {
-				teams.add(t);
+			setTeams(new ArrayList<String>());
+			for(String t : getTeamNames()) {
+				getTeams().add(t);
 			}
 
 			
-			Collections.sort(teams);
+			Collections.sort(getTeams());
 			
-			for(String teamName : teams) {
+			for(String teamName : getTeams()) {
 				information += "<br/><b>" + teamName + "</b>";
-				for(Player play : players) {
-					if(isEvenNumber(play.getYellowCards()) && play.getTeam().equalsIgnoreCase(teamName)){
+				for(Player play : getPlayers()) {
+					if(play.getTeam().equalsIgnoreCase(teamName)){
 						information += "<br/>" + play;
 					}
 				}
 				information += "<br/>";
 			}
 	
-			gui.getInfoLabel().setText(teams.size() + " lag og " + players.size() + " spillere ble hentet");
+			
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -210,15 +212,63 @@ public class DangerZoneParser {
 	
 	
 	public void reset() {
-		teamNames.clear();
-		teams.clear();
-		players.clear();
+		getTeamNames().clear();
+		getTeams().clear();
+		getPlayers().clear();
 	}
 	
 	public boolean isEvenNumber(int number) {
 		if((number % 2) == 0) {
 			return true;
 		} else return false;
+	}
+
+
+	/**
+	 * @return the teams
+	 */
+	public List<String> getTeams() {
+		return teams;
+	}
+
+
+	/**
+	 * @param teams the teams to set
+	 */
+	public void setTeams(List<String> teams) {
+		this.teams = teams;
+	}
+
+
+	/**
+	 * @return the teamNames
+	 */
+	public HashSet<String> getTeamNames() {
+		return teamNames;
+	}
+
+
+	/**
+	 * @param teamNames the teamNames to set
+	 */
+	public void setTeamNames(HashSet<String> teamNames) {
+		this.teamNames = teamNames;
+	}
+
+
+	/**
+	 * @return the players
+	 */
+	public List<Player> getPlayers() {
+		return players;
+	}
+
+
+	/**
+	 * @param players the players to set
+	 */
+	public void setPlayers(List<Player> players) {
+		this.players = players;
 	}
 	
 	
