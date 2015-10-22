@@ -1,8 +1,11 @@
 package sim.tv2.no.tippeligaen.fotballxtra.match;
 
+import java.sql.Date;
+
 public class Match implements Comparable {
 
-	private String matchDate, homeTeam, awayTeam, tournament, time, channels, round, referee, arena, matchUrl; 
+	private String matchDate, homeTeam, awayTeam, tournament, time, channels, referee, arena, matchUrl;
+	private int round;
 	
 	
 	// TODO Lagre url for kampene slik at vi kan direkte til de
@@ -18,7 +21,7 @@ public class Match implements Comparable {
 
 
 	public Match(String matchDate, String homeTeam, String awayTeam,
-			String tournament, String time, String channels, String round) {
+			String tournament, String time, String channels, int round) {
 		this.matchDate = matchDate;
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
@@ -135,21 +138,21 @@ public class Match implements Comparable {
 	}
 	
 	public String toString() {
-		String info = "Den " + matchDate + " på " + arena + " skal " + homeTeam + " spille " + round + " mot " + awayTeam + " kl. " + time + ". Kampen ser du på " + channels + " den dømmes av " + referee;
+		String info = "Den " + matchDate + " på " + arena + " skal " + homeTeam + " spille " + round + ". runde mot " + awayTeam + " kl. " + time + ". Kampen ser du på " + channels + " den dømmes av " + referee;
 		return info;
 	}
 
 	/**
 	 * @return the round
 	 */
-	public String getRound() {
+	public int getRound() {
 		return round;
 	}
 
 	/**
 	 * @param round the round to set
 	 */
-	public void setRound(String round) {
+	public void setRound(int round) {
 		this.round = round;
 	}
 

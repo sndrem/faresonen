@@ -2,8 +2,10 @@ package sim.tv2.no.tippeligaen.fotballxtra.parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +20,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import sim.tv2.no.tippeligaen.fotballxtra.actionListeners.EventHandler;
+import sim.tv2.no.tippeligaen.fotballxtra.dbConnection.DatabaseConnection;
 import sim.tv2.no.tippeligaen.fotballxtra.gui.RealGui;
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
@@ -29,21 +32,22 @@ public class DangerZoneParser {
 	private HashSet<String> teamNames;
 	private List<String> teams;
 	private List<Match> matchList;
+	private DatabaseConnection dbConn;
 	
 	public static void main(String[] args) {
 		DangerZoneParser parser = new DangerZoneParser();
-//		parser.getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
-		
+
 	}
 	
 	
 	public DangerZoneParser() {
+		dbConn = DatabaseConnection.getInstance();
 		setPlayers(new ArrayList<Player>());
 		setTeamNames(new HashSet<String>());
 		matchList = new ArrayList<Match>();
 		setTeams(new ArrayList<String>());
-//		getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
-				
+		getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
+		
 		for(Match m : matchList) {
 			System.out.println(m);
 		}
@@ -69,10 +73,11 @@ public class DangerZoneParser {
 			
 			Elements matches = nextMatches.get(0).getElementsByTag("tr");
 		
+			
 			for(Element match : matches) {
-				String date = match.getElementsByClass("sd_fixtures_date").text();
-//				String firstDate = matches.get(2).getElementsByClass("sd_fixtures_date").text();
+
 				String round = match.getElementsByClass("sd_fixtures_round").text();
+				int intRound = Integer.parseInt(round.split(" ")[0].replace('.', ' ').trim());
 				String tournament = match.getElementsByClass("sd_fixtures_tournament").text();
 				String homeTeam = match.getElementsByClass("sd_fixtures_home").text();
 				String awayTeam = match.getElementsByClass("sd_fixtures_away").text();
@@ -84,6 +89,9 @@ public class DangerZoneParser {
 				
 				// TODO Hent ut bare dommeren
 				Elements arenas = matchPage.select(".sd_game_small").select(".sd_game_home");
+				Elements roundAndDate = matchPage.select(".sd_game_small").select(".sd_game_away");
+				// Get the date for the game
+				String date = roundAndDate.text().split(" ")[3];
 				Element matchDetails = matchPage.getElementById("sd_match_details");
 				Elements refs = matchDetails.select("#sd_match_details > table > tbody > tr > td:nth-child(2) > p");
 				
@@ -100,21 +108,14 @@ public class DangerZoneParser {
 				String[] arenaText = null;
 				for(Element arena : arenas) {
 					arenaText = arena.text().split(" ");
-					
 				}
-						
-				// Has to check for non breaking space if several matches are played on the same date
-				if(date.equalsIgnoreCase("\u00a0")) {
-					Match matchToList = new Match(date, homeTeam, awayTeam, tournament, time.split(" ")[0], channels, round);
-					matchToList.setArena(arenaText[0] + " " + arenaText[1]);
-					matchToList.setReferee(referee);
-					matchList.add(matchToList);
-				} else {
-					Match matchToList = new Match(date, homeTeam, awayTeam, tournament, time.split(" ")[0], channels, round);
-					matchList.add(matchToList);
-					matchToList.setArena(arenaText[0] + " " + arenaText[1]);
-					matchToList.setReferee(referee);
-				}
+
+				Match matchToList = new Match(date, homeTeam, awayTeam, tournament, time.split(" ")[0], channels, intRound);
+				matchToList.setArena(arenaText[0] + " " + arenaText[1]);
+				matchToList.setReferee(referee);
+				matchList.add(matchToList);
+				dbConn.addMatch(matchToList);
+
 			}
 			
 						
@@ -122,8 +123,8 @@ public class DangerZoneParser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
+	
 	
 	public Set<Player> searchPlayer(String searchText) {
 		Set<Player> playList = new HashSet<Player>();
@@ -133,7 +134,6 @@ public class DangerZoneParser {
 		} else {
 			for(Player play : getPlayers()) {
 				if(play.getName().toLowerCase().contains(searchText)) {
-//					System.out.println(play.getName() + " er i faresonen med " + play.getYellowCards() + " gule kort.");
 					playList.add(play);
 				} else {
 					
