@@ -32,6 +32,7 @@ public class RealGui {
 	private JPanel panel;
 	private JPanel infoPanel;
 	private JButton loadAllPlayersButton;
+	private JButton clearSearchResultButton;
 
 	/**
 	 * Launch the application.
@@ -125,6 +126,10 @@ public class RealGui {
 		searchPlayerButton = new JButton("Søk etter spiller(e)");
 		searchPlayerButton.setEnabled(false);
 		searchPanel.add(searchPlayerButton);
+		
+		setClearSearchResultButton(new JButton("Fjern søkeresultater"));
+		searchPanel.add(getClearSearchResultButton());
+		
 		frame.getRootPane().setDefaultButton(searchPlayerButton);
 		
 		frame.setVisible(true);
@@ -255,6 +260,20 @@ public class RealGui {
 	 */
 	public void setLoadAllPlayersButton(JButton loadAllPlayersButton) {
 		this.loadAllPlayersButton = loadAllPlayersButton;
+	}
+
+	/**
+	 * @return the clearSearchResultButton
+	 */
+	public JButton getClearSearchResultButton() {
+		return clearSearchResultButton;
+	}
+
+	/**
+	 * @param clearSearchResultButton the clearSearchResultButton to set
+	 */
+	public void setClearSearchResultButton(JButton clearSearchResultButton) {
+		this.clearSearchResultButton = clearSearchResultButton;
 	}
 
 }

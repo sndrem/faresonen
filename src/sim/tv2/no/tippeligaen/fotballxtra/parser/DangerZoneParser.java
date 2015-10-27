@@ -41,16 +41,16 @@ public class DangerZoneParser {
 	
 	
 	public DangerZoneParser() {
-		dbConn = DatabaseConnection.getInstance();
+//		dbConn = DatabaseConnection.getInstance();
 		setPlayers(new ArrayList<Player>());
 		setTeamNames(new HashSet<String>());
 		matchList = new ArrayList<Match>();
 		setTeams(new ArrayList<String>());
-		getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
+//		getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1");
 		
-		for(Match m : matchList) {
-			System.out.println(m);
-		}
+//		for(Match m : matchList) {
+//			System.out.println(m);
+//		}
 		
 		gui = RealGui.getInstance();
 		setupActionListeners();
@@ -63,6 +63,7 @@ public class DangerZoneParser {
 		gui.getGetTippeligaButton().addActionListener(e);
 		gui.getSearchPlayerButton().addActionListener(e);
 		gui.getLoadAllPlayersButton().addActionListener(e);
+		gui.getClearSearchResultButton().addActionListener(e);
 	}
 	
 	
@@ -114,7 +115,8 @@ public class DangerZoneParser {
 				matchToList.setArena(arenaText[0] + " " + arenaText[1]);
 				matchToList.setReferee(referee);
 				matchList.add(matchToList);
-				dbConn.addMatch(matchToList);
+//				Uncomment to add match to database
+//				dbConn.addMatch(matchToList);
 
 			}
 			
