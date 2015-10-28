@@ -46,12 +46,14 @@ public class EventHandler implements ActionListener {
 			} else {
 				String info = "";
 				Set<Player> players = parser.searchPlayer(searchText.trim());
-				if(players != null) {
+				if(players != null && players.size() > 0) {
 					for(Player player : players) {
 						info += "<span style=\"font-size: 15px; color: red;\">" + player.getName() + " er i faresonen med " + player.getYellowCards() + " gule kort.</span><span style=\"font-size: 15px; text-decoration: underline;\"> Han må stå over neste kamp.</span><br/>";
 						info += "<br/>";
 					}
 					gui.getSummaryEditorPane().setText(info);
+				} else {
+					JOptionPane.showMessageDialog(gui.getFrame(), searchText + " er ikke i faresonen");
 				}
 				gui.getSearchField().setText("");
 			}
