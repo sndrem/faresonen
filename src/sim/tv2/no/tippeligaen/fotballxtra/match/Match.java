@@ -1,11 +1,9 @@
 package sim.tv2.no.tippeligaen.fotballxtra.match;
 
-import java.sql.Date;
 
-public class Match implements Comparable {
+public class Match implements Comparable<Match> {
 
-	private String matchDate, homeTeam, awayTeam, tournament, time, channels, referee, arena, matchUrl;
-	private int round;
+	private String matchDate, homeTeam, awayTeam, tournament, time, channels, referee, arena, matchUrl, round;
 	
 	
 	// TODO Lagre url for kampene slik at vi kan direkte til de
@@ -21,7 +19,7 @@ public class Match implements Comparable {
 
 
 	public Match(String matchDate, String homeTeam, String awayTeam,
-			String tournament, String time, String channels, int round) {
+			String tournament, String time, String channels, String round) {
 		this.matchDate = matchDate;
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
@@ -138,21 +136,26 @@ public class Match implements Comparable {
 	}
 	
 	public String toString() {
-		String info = "Den " + matchDate + " på " + arena + " skal " + homeTeam + " spille " + round + ". runde mot " + awayTeam + " kl. " + time + ". Kampen ser du på " + channels + " den dømmes av " + referee;
+		String info = "Den " + matchDate + " på " + arena + " skal " + homeTeam + " spille " + round + ". mot " + awayTeam + " kl. " + time + ".\n<br>Kampen ser du på " + channels + ". Dommer: ";
+		if(this.referee == "") {
+			info += "ukjent dommer";
+		} else {
+			info += this.referee;
+		}
 		return info;
 	}
 
 	/**
 	 * @return the round
 	 */
-	public int getRound() {
+	public String getRound() {
 		return round;
 	}
 
 	/**
 	 * @param round the round to set
 	 */
-	public void setRound(int round) {
+	public void setRound(String round) {
 		this.round = round;
 	}
 
@@ -172,8 +175,8 @@ public class Match implements Comparable {
 
 
 	@Override
-	public int compareTo(Object o) {
-		Match matchToCompare = (Match) o;
+	public int compareTo(Match o) {
+		Match matchToCompare = o;
 		return this.matchDate.compareTo(matchToCompare.getMatchDate());
 	}
 }

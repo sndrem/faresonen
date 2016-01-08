@@ -1,183 +1,252 @@
 package sim.tv2.no.tippeligaen.fotballxtra.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.text.html.HTMLDocument;
-import java.awt.Color;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
-public class Gui extends JFrame {
+public class Gui {
+
+	private JFrame frame;
+	private JTextField searchField;
+	private JButton getTippeligaButton;
+	private JButton getObosligaenButton;
+	private JButton searchPlayerButton;
+	private JEditorPane summaryEditorPane;
+	private JEditorPane dangerZoneEditorPane;
 	
-	private static Gui instance;
-	
-	private static final long serialVersionUID = -8541053030310624190L;
-	
-	private JButton tippeligaButton, obosButton, copyButton;
-	private JEditorPane textArea;
-	private Clipboard clipBoard;
+	private static Gui instance = null;
 	private JLabel infoLabel;
-	private JButton searchButton;
-	private JTextArea searchField;
 	private JPanel panel;
+	private JPanel infoPanel;
+	private JButton loadAllPlayersButton;
+	private JButton clearSearchResultButton;
+	private JTabbedPane tabbedPane;
+	private JButton getMatchesButton;
+	private JTextField urlArea;
+
+	/**
+	 * Launch the application.
+	 */
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					RealGui window = new RealGui();
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 	
-	
-	private Gui() {
-		setupGui();
-		clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+	public Gui() {
+		initialize();
 	}
-	
-	public static synchronized Gui getInstance() {
+
+	/**
+	 * Create the application.
+	 */
+	public static Gui getInstance() {
 		if(instance == null) {
 			instance = new Gui();
 		}
-		
 		return instance;
 	}
-	
-	private void setupGui() {
-		tippeligaButton = new JButton("Hent Tippeligaen");
-		obosButton = new JButton("Hent Obosligaen");
-		copyButton = new JButton("Marker alle spillere");
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setSize(new Dimension(1500, 1000));
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(new Dimension(1000,1000));
-		this.setTitle("Faresonen");
 		
-		getContentPane().setLayout(new BorderLayout());
+		
 		
 		JPanel buttonPanel = new JPanel();
-		
-		buttonPanel.add(tippeligaButton);
-		buttonPanel.add(obosButton);
-		
-		getContentPane().add(buttonPanel, BorderLayout.NORTH);
-		
-		Font font = new Font("Sans Gill MT", Font.PLAIN, 11);
-	    String bodyRule = "body { font-family: " + font.getName() + ", \"Sans-Serif\"; " +
-	            "font-size: " + font.getSize() + "pt; }";
+		frame.getContentPane().add(buttonPanel, BorderLayout.NORTH);
+		buttonPanel.setLayout(new BorderLayout(0, 0));
 		
 		panel = new JPanel();
-		getContentPane().add(panel, BorderLayout.CENTER);
+		buttonPanel.add(panel, BorderLayout.NORTH);
 		
-		textArea = new JEditorPane("text/html", "");
-		textArea.setBackground(Color.WHITE);
-		textArea.setEditable(false);
-		textArea.setSize(new Dimension(500, 500));
-		((HTMLDocument)textArea.getDocument()).getStyleSheet().addRule(bodyRule);
-		panel.setLayout(new BorderLayout(0, 0));
+		getTippeligaButton = new JButton("Tippeligaen");
+		panel.add(getTippeligaButton);
 		
+		getObosligaenButton = new JButton("OBOS-ligaen");
+		panel.add(getObosligaenButton);
 		
-		JScrollPane scrollPane = new JScrollPane(textArea);
-		panel.add(scrollPane, BorderLayout.CENTER);
+		setLoadAllPlayersButton(new JButton("Last alle spillere"));
+		panel.add(getLoadAllPlayersButton());
 		
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		JPanel bottomControlPanel = new JPanel(new BorderLayout());
-		bottomPanel.add(bottomControlPanel, BorderLayout.NORTH);
+		setGetMatchesButton(new JButton("Hent kamper"));
+		panel.add(getGetMatchesButton());
 		
-		bottomControlPanel.add(copyButton, BorderLayout.EAST);
-			
-		infoLabel = new JLabel("");
-		bottomPanel.add(infoLabel, BorderLayout.WEST);
+		setUrlArea(new JTextField(50));
+		getUrlArea().setToolTipText("Lim inn url fra AltOmFotball");
+		getUrlArea().setBorder(new TitledBorder("Url fra Alt om Fotball"));
+		panel.add(getUrlArea());
 		
-		searchButton = new JButton("Søk");
-		searchButton.setEnabled(false);
-		bottomControlPanel.add(searchButton, BorderLayout.CENTER);
+		infoPanel = new JPanel();
+		buttonPanel.add(infoPanel, BorderLayout.SOUTH);
 		
-		searchField = new JTextArea(1,40);
-		searchField.setBorder(BorderFactory.createTitledBorder("Søk etter spiller"));
-		bottomControlPanel.add(searchField, BorderLayout.WEST);
+		setInfoLabel(new JLabel(""));
+		infoPanel.add(getInfoLabel());
 		
 		
+		dangerZoneEditorPane = new JEditorPane("text/html", "");
+		dangerZoneEditorPane.setSize(new Dimension(500, 500));
 		
-//		bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+		JScrollPane dangerZoneScrollPane = new JScrollPane(dangerZoneEditorPane);
+		dangerZoneScrollPane.setSize(new Dimension(350, 350));
+		dangerZoneScrollPane.setPreferredSize(new Dimension(750, 750));
+		dangerZoneScrollPane.setViewportBorder(new TitledBorder(null, "Spillere i faresonen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
-		this.setLocationRelativeTo(null);
-		this.setVisible(true);
+		summaryEditorPane = new JEditorPane("text/html", "");
 		
+		JScrollPane summaryScrollPane = new JScrollPane(summaryEditorPane);
+		summaryScrollPane.setViewportBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Oppsummering etter s\u00F8k", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dangerZoneScrollPane, summaryScrollPane);
+		splitPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+		splitPane.setAlignmentY(Component.CENTER_ALIGNMENT);
+		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
+		splitPane.setDividerLocation(0.5);
+		splitPane.setOneTouchExpandable(true);
+		
+		JPanel searchPanel = new JPanel();
+		frame.getContentPane().add(searchPanel, BorderLayout.SOUTH);
+		
+		searchField = new JTextField();
+		searchPanel.add(searchField);
+		searchField.setColumns(40);
+		
+		searchPlayerButton = new JButton("Søk etter spiller(e)");
+		searchPlayerButton.setEnabled(false);
+		searchPanel.add(searchPlayerButton);
+		
+		setClearSearchResultButton(new JButton("Fjern søkeresultater"));
+		searchPanel.add(getClearSearchResultButton());
+		
+		
+		frame.getRootPane().setDefaultButton(searchPlayerButton);
+		
+		frame.setVisible(true);
+	
 	}
 
 	/**
-	 * @return the tippeligaButton
+	 * @return the frame
 	 */
-	public JButton getTippeligaButton() {
-		return tippeligaButton;
+	public JFrame getFrame() {
+		return frame;
 	}
 
 	/**
-	 * @param tippeligaButton the tippeligaButton to set
+	 * @param frame the frame to set
 	 */
-	public void setTippeligaButton(JButton tippeligaButton) {
-		this.tippeligaButton = tippeligaButton;
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
 	}
 
 	/**
-	 * @return the obosButton
+	 * @return the searchField
 	 */
-	public JButton getObosButton() {
-		return obosButton;
+	public JTextField getSearchField() {
+		return searchField;
 	}
 
 	/**
-	 * @param obosButton the obosButton to set
+	 * @param searchField the searchField to set
 	 */
-	public void setObosButton(JButton obosButton) {
-		this.obosButton = obosButton;
-	}
-
-
-	/**
-	 * @return the copyButton
-	 */
-	public JButton getCopyButton() {
-		return copyButton;
+	public void setSearchField(JTextField searchField) {
+		this.searchField = searchField;
 	}
 
 	/**
-	 * @param copyButton the copyButton to set
+	 * @return the getTippeligaButton
 	 */
-	public void setCopyButton(JButton copyButton) {
-		this.copyButton = copyButton;
+	public JButton getGetTippeligaButton() {
+		return getTippeligaButton;
 	}
 
 	/**
-	 * @return the textArea
+	 * @param getTippeligaButton the getTippeligaButton to set
 	 */
-	public JEditorPane getTextArea() {
-		return textArea;
+	public void setGetTippeligaButton(JButton getTippeligaButton) {
+		this.getTippeligaButton = getTippeligaButton;
 	}
 
 	/**
-	 * @param textArea the textArea to set
+	 * @return the getObosligaenButton
 	 */
-	public void setTextArea(JEditorPane textArea) {
-		this.textArea = textArea;
+	public JButton getGetObosligaenButton() {
+		return getObosligaenButton;
 	}
 
 	/**
-	 * @return the clipBoard
+	 * @param getObosligaenButton the getObosligaenButton to set
 	 */
-	public Clipboard getClipBoard() {
-		return clipBoard;
+	public void setGetObosligaenButton(JButton getObosligaenButton) {
+		this.getObosligaenButton = getObosligaenButton;
 	}
 
 	/**
-	 * @param clipBoard the clipBoard to set
+	 * @return the searchPlayerButton
 	 */
-	public void setClipBoard(Clipboard clipBoard) {
-		this.clipBoard = clipBoard;
+	public JButton getSearchPlayerButton() {
+		return searchPlayerButton;
+	}
+
+	/**
+	 * @param searchPlayerButton the searchPlayerButton to set
+	 */
+	public void setSearchPlayerButton(JButton searchPlayerButton) {
+		this.searchPlayerButton = searchPlayerButton;
+	}
+
+	/**
+	 * @return the summaryEditorPane
+	 */
+	public JEditorPane getSummaryEditorPane() {
+		return summaryEditorPane;
+	}
+
+	/**
+	 * @param summaryEditorPane the summaryEditorPane to set
+	 */
+	public void setSummaryEditorPane(JEditorPane summaryEditorPane) {
+		this.summaryEditorPane = summaryEditorPane;
+	}
+
+	/**
+	 * @return the dangerSoneEditorPane
+	 */
+	public JEditorPane getDangerZoneEditorPane() {
+		return dangerZoneEditorPane;
+	}
+
+	/**
+	 * @param dangerSoneEditorPane the dangerSoneEditorPane to set
+	 */
+	public void setDangerZoneEditorPane(JEditorPane dangerSoneEditorPane) {
+		this.dangerZoneEditorPane = dangerSoneEditorPane;
 	}
 
 	/**
@@ -195,34 +264,73 @@ public class Gui extends JFrame {
 	}
 
 	/**
-	 * @return the searchButton
+	 * @return the loadAllPlayersButton
 	 */
-	public JButton getSearchButton() {
-		return searchButton;
+	public JButton getLoadAllPlayersButton() {
+		return loadAllPlayersButton;
 	}
 
 	/**
-	 * @param searchButton the searchButton to set
+	 * @param loadAllPlayersButton the loadAllPlayersButton to set
 	 */
-	public void setSearchButton(JButton searchButton) {
-		this.searchButton = searchButton;
+	public void setLoadAllPlayersButton(JButton loadAllPlayersButton) {
+		this.loadAllPlayersButton = loadAllPlayersButton;
 	}
 
 	/**
-	 * @return the searchField
+	 * @return the clearSearchResultButton
 	 */
-	public JTextArea getSearchField() {
-		return searchField;
+	public JButton getClearSearchResultButton() {
+		return clearSearchResultButton;
 	}
 
 	/**
-	 * @param searchField the searchField to set
+	 * @param clearSearchResultButton the clearSearchResultButton to set
 	 */
-	public void setSearchField(JTextArea searchField) {
-		this.searchField = searchField;
+	public void setClearSearchResultButton(JButton clearSearchResultButton) {
+		this.clearSearchResultButton = clearSearchResultButton;
 	}
 
-	
-	
+	/**
+	 * @return the tabbedPane
+	 */
+	public JTabbedPane getTabbedPane() {
+		return tabbedPane;
+	}
+
+	/**
+	 * @param tabbedPane the tabbedPane to set
+	 */
+	public void setTabbedPane(JTabbedPane tabbedPane) {
+		this.tabbedPane = tabbedPane;
+	}
+
+	/**
+	 * @return the getMatchesButton
+	 */
+	public JButton getGetMatchesButton() {
+		return getMatchesButton;
+	}
+
+	/**
+	 * @param getMatchesButton the getMatchesButton to set
+	 */
+	public void setGetMatchesButton(JButton getMatchesButton) {
+		this.getMatchesButton = getMatchesButton;
+	}
+
+	/**
+	 * @return the urlArea
+	 */
+	public JTextField getUrlArea() {
+		return urlArea;
+	}
+
+	/**
+	 * @param urlArea the urlArea to set
+	 */
+	public void setUrlArea(JTextField urlArea) {
+		this.urlArea = urlArea;
+	}
 
 }

@@ -63,7 +63,7 @@ public class DatabaseConnection {
 		try {
 			insertStatement = this.conn.prepareStatement(addMatchQuery);
 			insertStatement.setString(1, match.getMatchDate());
-			insertStatement.setInt(2, match.getRound());
+			insertStatement.setString(2, match.getRound());
 			insertStatement.setString(3, match.getTournament());
 			insertStatement.setString(4, match.getHomeTeam());
 			insertStatement.setString(5, match.getAwayTeam());
