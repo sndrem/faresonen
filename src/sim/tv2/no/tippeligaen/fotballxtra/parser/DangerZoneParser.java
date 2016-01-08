@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.SwingWorker;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -64,7 +65,7 @@ public class DangerZoneParser {
 				String matchUrl = "http://altomfotball.no/" + match.getElementsByClass("sd_fixtures_score").tagName("a").attr("href");
 				Document matchPage = Jsoup.connect(matchUrl).get();
 				
-				// TODO Hent ut bare dommeren
+				// TODO Hent bare ut dommeren
 				Elements arenas = matchPage.select(".sd_game_small").select(".sd_game_home");
 				Elements roundAndDate = matchPage.select(".sd_game_small").select(".sd_game_away");
 				// Get the date for the game
@@ -253,8 +254,4 @@ public class DangerZoneParser {
 	public void setMatchList(List<Match> matchList) {
 		this.matchList = matchList;
 	}
-	
-	
-	
-
 }

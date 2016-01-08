@@ -4,12 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.LayoutManager;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -36,22 +39,8 @@ public class Gui {
 	private JTabbedPane tabbedPane;
 	private JButton getMatchesButton;
 	private JTextField urlArea;
+	private JLabel statusLabel;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					RealGui window = new RealGui();
-//					window.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 	
 	public Gui() {
 		initialize();
@@ -75,8 +64,6 @@ public class Gui {
 		frame.setSize(new Dimension(1500, 1000));
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
 		
 		
 		JPanel buttonPanel = new JPanel();
@@ -130,10 +117,11 @@ public class Gui {
 		splitPane.setDividerLocation(0.5);
 		splitPane.setOneTouchExpandable(true);
 		
-		JPanel searchPanel = new JPanel();
+		JPanel searchPanel = new JPanel(new GridLayout(2,2));
 		frame.getContentPane().add(searchPanel, BorderLayout.SOUTH);
 		
 		searchField = new JTextField();
+		searchField.setBorder(new TitledBorder("Søk etter spillere"));
 		searchPanel.add(searchField);
 		searchField.setColumns(40);
 		
@@ -141,9 +129,12 @@ public class Gui {
 		searchPlayerButton.setEnabled(false);
 		searchPanel.add(searchPlayerButton);
 		
+		
 		setClearSearchResultButton(new JButton("Fjern søkeresultater"));
 		searchPanel.add(getClearSearchResultButton());
 		
+		setStatusLabel(new JLabel(""));
+		searchPanel.add(getStatusLabel());
 		
 		frame.getRootPane().setDefaultButton(searchPlayerButton);
 		
@@ -331,6 +322,24 @@ public class Gui {
 	 */
 	public void setUrlArea(JTextField urlArea) {
 		this.urlArea = urlArea;
+	}
+
+	/**
+	 * @return the statusLabel
+	 */
+	public JLabel getStatusLabel() {
+		return statusLabel;
+	}
+
+	/**
+	 * @param statusLabel the statusLabel to set
+	 */
+	public void setStatusLabel(JLabel statusLabel) {
+		this.statusLabel = statusLabel;
+	}
+	
+	public void updateStatusLabel(String status) {
+		this.statusLabel.setText(status);
 	}
 
 }

@@ -136,11 +136,14 @@ public class Match implements Comparable<Match> {
 	}
 	
 	public String toString() {
-		String info = "Den " + matchDate + " på " + arena + " skal " + homeTeam + " spille " + round + ". mot " + awayTeam + " kl. " + time + ".\n<br>Kampen ser du på " + channels + ". Dommer: ";
-		if(this.referee == "") {
-			info += "ukjent dommer";
-		} else {
-			info += this.referee;
+		String info = "<b>" + round + "</b> - <em>" + matchDate + "</em>" + "<br>" + "<span style=\"font-size:15px;\">" + homeTeam + " <span style=\"color:red;\">VS</span> " + awayTeam + " kl. " + time + ".\n<br>" + arena +"</span><br>";
+		
+		// Hvis kampen går på en kanal, vis kanalen også
+		if(this.channels.length() > 2) {
+			info += "Kampen ser du på " + channels;
+		}
+		if(this.referee != "") {
+			info += "Dommer: " + this.referee;
 		}
 		return info;
 	}
