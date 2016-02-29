@@ -143,7 +143,7 @@ public class Match implements Comparable<Match> {
 			info += "Kampen ser du på " + channels;
 		}
 		if(this.referee != "") {
-			info += "Dommer: " + this.referee;
+			info += "<br>" + this.referee;
 		}
 		return info;
 	}
