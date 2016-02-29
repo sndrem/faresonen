@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>/Users/sindremoldeklev/Documents/eclipseWorkspace/Tippeligaen/faresonen.jar</jar>
+  <outfile>/Users/sindremoldeklev/Documents/eclipseWorkspace/Tippeligaen/faresonen.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon></icon>
+  <jre>
+    <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>1.0.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.0.0.0</fileVersion>
+    <txtFileVersion>Yes</txtFileVersion>
+    <fileDescription>Program for å lette foreberedelsesarbeidet for grafikkavviklere som har sendinger for Tippeligaen</fileDescription>
+    <copyright>Sindre Moldeklev</copyright>
+    <productVersion>1.0.0.0</productVersion>
+    <txtProductVersion>Yes</txtProductVersion>
+    <productName>Faresonen</productName>
+    <companyName></companyName>
+    <internalName>Faresonen</internalName>
+    <originalFilename>Faresonen.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>

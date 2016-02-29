@@ -2,16 +2,14 @@ package sim.tv2.no.tippeligaen.fotballxtra.main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 
 import sim.tv2.no.tippeligaen.fotballxtra.gui.Gui;
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
@@ -28,6 +26,7 @@ import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
 public class Main {
 	private Gui gui;
 	private DangerZoneParser parser;
+	private Map<String, String> leagueUrls;
 	private final String TIPPELIGAEN = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=1&seasonId=&teamId=";
 	private final String OBOSLIGAEN = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=2&seasonId=&teamId=";
 	
@@ -36,7 +35,6 @@ public class Main {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				new Main();				
 			}
 		};
@@ -51,7 +49,24 @@ public class Main {
 	public Main() {	
 		parser = new DangerZoneParser();
 		gui = Gui.getInstance();
+		leagueUrls = new HashMap<String, String>();
+		setupLeagueUrls();
 		setupActionListeners();
+		
+	}
+	
+	/**
+	 * Metode for å sette opp combobox med league-urls
+	 */
+	private void setupLeagueUrls() {
+		this.leagueUrls.put("Tippeligaen", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1&useFullUrl=false");
+		this.leagueUrls.put("OBOS-ligaen", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=2&useFullUrl=false");
+		this.leagueUrls.put("Premier League", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=230&useFullUrl=false");
+		this.leagueUrls.put("Championship", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=231&useFullUrl=false");
+		
+		for(String league : this.leagueUrls.keySet()) {
+			gui.getLeagueUrls().addItem(league);
+		}
 	}
 	
 	/**
@@ -73,6 +88,7 @@ public class Main {
 	 */
 	private void showMatches(List<Match> matches) {
 		String summary = "";
+		gui.getInfoLabel().setText("Hentet " + matches.size() + " kamper" );
 		for(Match match : matches) {
 			summary += "<br><br>" + match.toString() + "<br><br>";
 			gui.getSummaryEditorPane().setText("<p>" + summary + "</p>");
@@ -205,11 +221,10 @@ private class EventHandler implements ActionListener {
 				parser.getMatchList().clear();
 				List<Match> nextMatches = null;
 				gui.getSummaryEditorPane().setText("");
-				if(gui.getUrlArea().getText().equals("")) {
-					nextMatches = parser.getNextMatches("http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=230&useFullUrl=false");
-				} else {
-					nextMatches = parser.getNextMatches(gui.getUrlArea().getText().trim());
-				}
+				
+				String leagueUrl = leagueUrls.get(gui.getLeagueUrls().getSelectedItem());
+				
+				nextMatches = parser.getNextMatches(leagueUrl.trim());
 				showMatches(nextMatches);
 				
 			}

@@ -5,14 +5,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -38,8 +37,8 @@ public class Gui {
 	private JButton clearSearchResultButton;
 	private JTabbedPane tabbedPane;
 	private JButton getMatchesButton;
-	private JTextField urlArea;
 	private JLabel statusLabel;
+	private JComboBox<String> leagueUrls;
 
 	
 	public Gui() {
@@ -66,12 +65,11 @@ public class Gui {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
-		JPanel buttonPanel = new JPanel();
+		JPanel buttonPanel = new JPanel(new BorderLayout());
 		frame.getContentPane().add(buttonPanel, BorderLayout.NORTH);
-		buttonPanel.setLayout(new BorderLayout(0, 0));
 		
 		panel = new JPanel();
-		buttonPanel.add(panel, BorderLayout.NORTH);
+		panel.setBorder(new TitledBorder("Hent spillere i faresonen"));
 		
 		getTippeligaButton = new JButton("Tippeligaen");
 		panel.add(getTippeligaButton);
@@ -82,13 +80,16 @@ public class Gui {
 		setLoadAllPlayersButton(new JButton("Last alle spillere"));
 		panel.add(getLoadAllPlayersButton());
 		
-		setGetMatchesButton(new JButton("Hent kamper"));
-		panel.add(getGetMatchesButton());
 		
-		setUrlArea(new JTextField(50));
-		getUrlArea().setToolTipText("Lim inn url fra AltOmFotball");
-		getUrlArea().setBorder(new TitledBorder("Url fra Alt om Fotball"));
-		panel.add(getUrlArea());
+		JPanel getNextMatchesPanel = new JPanel();
+		setGetMatchesButton(new JButton("Hent kamper"));
+		getNextMatchesPanel.add(getGetMatchesButton());
+		setLeagueUrls(new JComboBox<String>());
+		getNextMatchesPanel.add(getLeagueUrls());
+		getNextMatchesPanel.setBorder(new TitledBorder("Hent info om neste kamper"));
+		
+		buttonPanel.add(getNextMatchesPanel);
+		buttonPanel.add(panel, BorderLayout.NORTH);
 		
 		infoPanel = new JPanel();
 		buttonPanel.add(infoPanel, BorderLayout.SOUTH);
@@ -311,20 +312,6 @@ public class Gui {
 	}
 
 	/**
-	 * @return the urlArea
-	 */
-	public JTextField getUrlArea() {
-		return urlArea;
-	}
-
-	/**
-	 * @param urlArea the urlArea to set
-	 */
-	public void setUrlArea(JTextField urlArea) {
-		this.urlArea = urlArea;
-	}
-
-	/**
 	 * @return the statusLabel
 	 */
 	public JLabel getStatusLabel() {
@@ -340,6 +327,20 @@ public class Gui {
 	
 	public void updateStatusLabel(String status) {
 		this.statusLabel.setText(status);
+	}
+
+	/**
+	 * @return the leagueUrls
+	 */
+	public JComboBox<String> getLeagueUrls() {
+		return leagueUrls;
+	}
+
+	/**
+	 * @param leagueUrls the leagueUrls to set
+	 */
+	public void setLeagueUrls(JComboBox<String> leagueUrls) {
+		this.leagueUrls = leagueUrls;
 	}
 
 }
