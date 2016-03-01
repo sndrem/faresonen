@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.SwingWorker;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -28,12 +26,7 @@ public class DangerZoneParser {
 	private HashSet<String> teamNames;
 	private List<String> teams;
 	private List<Match> matchList;
-	
-	public static void main(String[] args) {
-		new DangerZoneParser();
-
-	}
-	
+		
 	
 	public DangerZoneParser() {
 //		dbConn = DatabaseConnection.getInstance();
@@ -46,12 +39,18 @@ public class DangerZoneParser {
 	}
 	
 	
-	public List<Match> getNextMatches(String url) {
+	public List<Match> getNextMatches(String url) throws IndexOutOfBoundsException {
 		try {
 			Document doc = Jsoup.connect(url).get();
 			Elements nextMatches = doc.getElementsByAttributeValue("id", "sd_fixtures_table_next");
 			
-			Elements matches = nextMatches.get(0).getElementsByTag("tr");
+			Elements matches = null;
+			try {
+				
+				matches = nextMatches.get(0).getElementsByTag("tr");
+			} catch (IndexOutOfBoundsException ex) {
+				throw new IndexOutOfBoundsException("Kunne ikke hente neste kamper");
+			}
 		
 			for(Element match : matches) {
 
@@ -69,7 +68,8 @@ public class DangerZoneParser {
 				Elements arenas = matchPage.select(".sd_game_small").select(".sd_game_home");
 				Elements roundAndDate = matchPage.select(".sd_game_small").select(".sd_game_away");
 				// Get the date for the game
-				String date = roundAndDate.text().split(" ")[4];
+				String[] dateArray = roundAndDate.text().split(" ");	
+				String date = dateArray[dateArray.length - 3];
 				Element matchDetails = matchPage.getElementById("sd_match_details");
 				Elements refs = matchDetails.select("#sd_match_details > table > tbody > tr > td:nth-child(2) > p");
 				

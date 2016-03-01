@@ -224,8 +224,12 @@ private class EventHandler implements ActionListener {
 				
 				String leagueUrl = leagueUrls.get(gui.getLeagueUrls().getSelectedItem());
 				
-				nextMatches = parser.getNextMatches(leagueUrl.trim());
-				showMatches(nextMatches);
+				try {
+					nextMatches = parser.getNextMatches(leagueUrl.trim());
+					showMatches(nextMatches);
+				} catch(IndexOutOfBoundsException exe) {
+					gui.getInfoLabel().setText("Kunne ikke hente kamper for " + gui.getLeagueUrls().getSelectedItem());
+				}
 				
 			}
 		}
