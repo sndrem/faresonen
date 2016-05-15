@@ -9,21 +9,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.SwingWorker;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import sim.tv2.no.tippeligaen.fotballxtra.dbConnection.DatabaseConnection;
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
 
 public class DangerZoneParser {
 
-
-	private DatabaseConnection dbConn;
 	private List<Player> players;
 	private HashSet<String> teamNames;
 	private List<String> teams;

@@ -88,6 +88,7 @@ public class Gui {
 		getNextMatchesPanel.add(getLeagueUrls());
 		getNextMatchesPanel.setBorder(new TitledBorder("Hent info om neste kamper"));
 		
+		
 		buttonPanel.add(getNextMatchesPanel);
 		buttonPanel.add(panel, BorderLayout.NORTH);
 		
