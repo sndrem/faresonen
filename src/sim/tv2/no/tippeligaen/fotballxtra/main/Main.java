@@ -2,6 +2,7 @@ package sim.tv2.no.tippeligaen.fotballxtra.main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -198,7 +199,13 @@ public class Main {
 	 * Method to get the top scorer
 	 */
 	public void getTopscorers(String url) {
-		parser.getTopscorers(url);
+		try {
+			parser.getTopscorers(url);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			gui.showMessage(e.getMessage());
+		}
 	}
 	
 	
@@ -222,13 +229,27 @@ private class EventHandler implements ActionListener {
 			// Hent faresonen for Tippeligaen
 			if(e.getSource() == gui.getGetTippeligaButton()) {
 				parser.reset();
-				String info = parser.getDangerZonePlayers(TIPPELIGAEN);
+				String info = null;
+				try {
+					info = parser.getDangerZonePlayers(TIPPELIGAEN);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					gui.showMessage(e1.getMessage());
+				}
 				showInfo(info);
 			
 			// Hent faresonen for OBOSligaen
 			} else if (e.getSource() == gui.getGetObosligaenButton()) {
 				parser.reset();
-				String info = parser.getDangerZonePlayers(OBOSLIGAEN);
+				String info = null;
+				try {
+					info = parser.getDangerZonePlayers(OBOSLIGAEN);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					gui.showMessage(e1.getMessage());
+				}
 				showInfo(info);
 			
 			// Søk etter en spiller
@@ -249,8 +270,14 @@ private class EventHandler implements ActionListener {
 			} else if (e.getSource() == gui.getLoadAllPlayersButton()) {
 				if(!this.hasLoadedEveryone) {
 					parser.reset();
-					parser.getDangerZonePlayers(TIPPELIGAEN);
-					parser.getDangerZonePlayers(OBOSLIGAEN);
+					try {
+						parser.getDangerZonePlayers(TIPPELIGAEN);
+						parser.getDangerZonePlayers(OBOSLIGAEN);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+						gui.showMessage(e1.getMessage());
+					}
 					
 					gui.getInfoLabel().setText("Tippeligaen og OBOS-ligaen er lastet");
 					gui.getSearchPlayerButton().setEnabled(true);
@@ -262,8 +289,12 @@ private class EventHandler implements ActionListener {
 						return;
 					} else if (choice == 0) {
 						parser.reset();
-						parser.getDangerZonePlayers(TIPPELIGAEN);
-						parser.getDangerZonePlayers(OBOSLIGAEN);
+						try {
+							parser.getDangerZonePlayers(TIPPELIGAEN);
+							parser.getDangerZonePlayers(OBOSLIGAEN);
+						} catch(IOException e2) {
+							gui.showMessage(e2.getMessage());
+						}
 						
 						gui.getInfoLabel().setText("Tippeligaen og OBOS-ligaen ble lastet på nytt");
 						gui.getSearchPlayerButton().setEnabled(true);
@@ -285,11 +316,19 @@ private class EventHandler implements ActionListener {
 					showMatches(nextMatches);
 				} catch(IndexOutOfBoundsException exe) {
 					gui.getInfoLabel().setText("Kunne ikke hente kamper for " + gui.getLeagueUrls().getSelectedItem());
+				} catch(IOException exe) {
+					gui.showMessage(exe.getMessage());
 				}
 			// Hent toppscorere
 			} else if(e.getSource() == gui.getTopscorerButton()) {
 				String url = topscorerUrls.get(gui.getTopscorerDropdown().getSelectedItem());
-				showTopscorers(parser.getTopscorers(url));
+				try {
+					showTopscorers(parser.getTopscorers(url));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					gui.showMessage(e1.getMessage());
+				}
 			}
 		}
 	}

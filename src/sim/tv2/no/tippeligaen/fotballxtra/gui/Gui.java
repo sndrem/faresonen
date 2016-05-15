@@ -11,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -153,6 +154,13 @@ public class Gui {
 		
 		frame.setVisible(true);
 	
+	}
+	
+	/**
+	 * Method to show a popup dialog
+	 */
+	public void showMessage(String message) {
+		JOptionPane.showMessageDialog(null, message);
 	}
 
 	/**

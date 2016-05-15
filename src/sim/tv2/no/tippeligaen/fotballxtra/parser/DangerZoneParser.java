@@ -44,7 +44,7 @@ public class DangerZoneParser {
 	 * @return a list with the next matches
 	 * @throws IndexOutOfBoundsException
 	 */
-	public List<Match> getNextMatches(String url) throws IndexOutOfBoundsException {
+	public List<Match> getNextMatches(String url) throws IndexOutOfBoundsException , IOException{
 		try {
 			Document doc = Jsoup.connect(url).get();
 			Elements nextMatches = doc.getElementsByAttributeValue("id", "sd_fixtures_table_next");
@@ -104,14 +104,13 @@ public class DangerZoneParser {
 				matchToList.setReferee(referee);
 				getMatchList().add(matchToList);
 				
-//				Uncomment to add match to database
-//				dbConn.addMatch(matchToList);
 			}
 			
 						
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new IOException("Kunne ikke hente neste kamper for. Er du koblet til internett?");
 		}
 		return matchList;
 	}
@@ -122,7 +121,7 @@ public class DangerZoneParser {
 	 * @param url the url for the league
 	 * @return a string with information about the 
 	 */
-	public String getDangerZonePlayers(String url) {
+	public String getDangerZonePlayers(String url) throws IOException {
 		String information = "";
 		try {
 			Document doc = Jsoup.connect(url).get();
@@ -191,6 +190,7 @@ public class DangerZoneParser {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new IOException("Kunne ikke hente spillere i faresonen. Er du koble til internett?");
 		}
 
 		return information;
@@ -201,7 +201,7 @@ public class DangerZoneParser {
 	 * @param url - the url for the league
 	 * @throws IOException
 	 */
-	public List<Topscorer> getTopscorers(String url) {
+	public List<Topscorer> getTopscorers(String url) throws IOException {
 		List<Topscorer> topscorers = new ArrayList<Topscorer>();
 		try {
 			Document doc = Jsoup.connect(url).get();
@@ -218,6 +218,7 @@ public class DangerZoneParser {
 			}
 		} catch(IOException e) {
 			e.printStackTrace();
+			throw new IOException("Kunne ikke hente toppscorere. Er du koblet til internett?");
 		}
 		
 		return topscorers;
