@@ -12,7 +12,7 @@ public class Team implements Comparable<Team> {
 	
 	public Team(String teamName) {
 		this.teamName = teamName;
-		players = new ArrayList<>();
+		players = new ArrayList<Player>();
 	}
 	
 	public Team(String teamName, List<Player> players) {

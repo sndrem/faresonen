@@ -9,11 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 6604efa88646ea0738575ca3ce0e97c6e2d1df98
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
