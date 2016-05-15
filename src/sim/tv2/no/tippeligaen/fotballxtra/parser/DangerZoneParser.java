@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,6 +17,7 @@ import org.jsoup.select.Elements;
 
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
+import sim.tv2.no.tippeligaen.fotballxtra.player.Topscorer;
 import sim.tv2.no.tippeligaen.fotballxtra.team.Team;
 
 public class DangerZoneParser {
@@ -192,6 +194,33 @@ public class DangerZoneParser {
 		}
 
 		return information;
+	}
+	
+	/**
+	 * Method to get top 10 topscorers for a given league based on the url
+	 * @param url - the url for the league
+	 * @throws IOException
+	 */
+	public List<Topscorer> getTopscorers(String url) {
+		List<Topscorer> topscorers = new ArrayList<Topscorer>();
+		try {
+			Document doc = Jsoup.connect(url).get();
+			Elements playerRow = doc.select("tbody tr");
+			for (int i = 0; i < 10; i++) {
+				String playerName = playerRow.get(i).child(1).text();
+				String team = playerRow.get(i).child(2).text();
+				int goals = Integer.parseInt(playerRow.get(i).child(3).text());
+				int numMatches = Integer.parseInt(playerRow.get(i).child(4).text());
+				String avg = playerRow.get(i).child(5).text().replace(",", ".");;
+				double goalAvg = Double.parseDouble(avg);
+				
+				topscorers.add(new Topscorer(playerName, team, goals, numMatches, goalAvg));
+			}
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		return topscorers;
 	}
 	
 	

@@ -15,6 +15,7 @@ import sim.tv2.no.tippeligaen.fotballxtra.gui.Gui;
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
 import sim.tv2.no.tippeligaen.fotballxtra.parser.DangerZoneParser;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
+import sim.tv2.no.tippeligaen.fotballxtra.player.Topscorer;
 
 /**
  * Dette er hovedklassen for faresone-programmet.
@@ -27,6 +28,7 @@ public class Main {
 	private Gui gui;
 	private DangerZoneParser parser;
 	private Map<String, String> leagueUrls;
+	private Map<String, String> topscorerUrls;
 	private final String TIPPELIGAEN = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=1&seasonId=&teamId=";
 	private final String OBOSLIGAEN = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=2&seasonId=&teamId=";
 	
@@ -50,6 +52,7 @@ public class Main {
 		parser = new DangerZoneParser();
 		gui = Gui.getInstance();
 		leagueUrls = new HashMap<String, String>();
+		topscorerUrls = new HashMap<String, String>();
 		setupLeagueUrls();
 		setupActionListeners();
 		
@@ -59,13 +62,25 @@ public class Main {
 	 * Metode for å sette opp combobox med league-urls
 	 */
 	private void setupLeagueUrls() {
+		// For å hente neste kamper
 		this.leagueUrls.put("Tippeligaen", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1&useFullUrl=false");
 		this.leagueUrls.put("OBOS-ligaen", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=2&useFullUrl=false");
 		this.leagueUrls.put("Premier League", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=230&useFullUrl=false");
 		this.leagueUrls.put("Championship", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=231&useFullUrl=false");
 		
+		
 		for(String league : this.leagueUrls.keySet()) {
 			gui.getLeagueUrls().addItem(league);
+		}
+
+		// Url for toppscorerlister
+		this.topscorerUrls.put("Tippeligaen", "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=goals&tournamentId=1&seasonId=&teamId=&useFullUrl=false");
+		this.topscorerUrls.put("Premier League", "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=goals&tournamentId=230&seasonId=&teamId=&useFullUrl=false");
+		this.topscorerUrls.put("OBOS-ligaen", "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=goals&tournamentId=2&seasonId=&teamId=&useFullUrl=false");
+		this.topscorerUrls.put("Championship", "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=goals&tournamentId=231&seasonId=&teamId=&useFullUrl=false");
+		
+		for(String league : this.topscorerUrls.keySet()) {
+			gui.getTopscorerDropdown().addItem(league);
 		}
 	}
 	
@@ -80,6 +95,7 @@ public class Main {
 		gui.getLoadAllPlayersButton().addActionListener(e);
 		gui.getClearSearchResultButton().addActionListener(e);
 		gui.getGetMatchesButton().addActionListener(e);
+		gui.getTopscorerButton().addActionListener(e);
 }
 
 	/**
@@ -143,6 +159,46 @@ public class Main {
 		gui.getSearchPlayerButton().setEnabled(true);
 		gui.getDangerZoneEditorPane().setText(info);
 		gui.getInfoLabel().setText(parser.getTeams().size() + " lag og " + parser.getPlayers().size() + " spillere ble hentet");
+	}
+	
+	/**
+	 * Method to show topscorers
+	 */
+	public void showTopscorers(List<Topscorer> players) {
+		String html 	= "<table>"
+						+ "<thead>"
+						+ "<tr>"
+						+ "<th></th>"
+						+ "<th>Navn</th>"
+						+ "<th>Lag</th>"
+						+ "<th>Kamper</th>"
+						+ "<th>Mål</th>"
+						+ "<th>Målsnitt</th>"
+						+ "</thead>"
+						+ "<tbody>"
+						+ "</tr>";
+		int index = 1;
+						for(Topscorer player : players) {
+							html += "<tr>"
+									+ "<td>" + index + "</td>"
+									+ "<td>" + player.getName() + "</td>"
+									+ "<td>" + player.getTeam() + "</td>"
+									+ "<td>" + player.getMatches() + "</td>"
+									+ "<td>" + player.getGoals() + "</td>"
+									+ "<td>" + player.getGoalAvg() + "</td>"
+									+ "</tr>";
+						index++;
+						}
+				html 	+= "</tbody>"
+						+ "</table>";
+		gui.getSummaryEditorPane().setText(html);
+	}
+	
+	/**
+	 * Method to get the top scorer
+	 */
+	public void getTopscorers(String url) {
+		parser.getTopscorers(url);
 	}
 	
 	
@@ -230,7 +286,10 @@ private class EventHandler implements ActionListener {
 				} catch(IndexOutOfBoundsException exe) {
 					gui.getInfoLabel().setText("Kunne ikke hente kamper for " + gui.getLeagueUrls().getSelectedItem());
 				}
-				
+			// Hent toppscorere
+			} else if(e.getSource() == gui.getTopscorerButton()) {
+				String url = topscorerUrls.get(gui.getTopscorerDropdown().getSelectedItem());
+				showTopscorers(parser.getTopscorers(url));
 			}
 		}
 	}

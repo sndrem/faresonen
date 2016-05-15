@@ -39,6 +39,8 @@ public class Gui {
 	private JButton getMatchesButton;
 	private JLabel statusLabel;
 	private JComboBox<String> leagueUrls;
+	private JButton topscorerButton;
+	private JComboBox<String> topscorerDropdown;
 
 	
 	public Gui() {
@@ -65,7 +67,7 @@ public class Gui {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
-		JPanel buttonPanel = new JPanel(new BorderLayout());
+		JPanel buttonPanel = new JPanel();
 		frame.getContentPane().add(buttonPanel, BorderLayout.NORTH);
 		
 		panel = new JPanel();
@@ -89,8 +91,8 @@ public class Gui {
 		getNextMatchesPanel.setBorder(new TitledBorder("Hent info om neste kamper"));
 		
 		
+		buttonPanel.add(panel);
 		buttonPanel.add(getNextMatchesPanel);
-		buttonPanel.add(panel, BorderLayout.NORTH);
 		
 		infoPanel = new JPanel();
 		buttonPanel.add(infoPanel, BorderLayout.SOUTH);
@@ -98,6 +100,15 @@ public class Gui {
 		setInfoLabel(new JLabel(""));
 		infoPanel.add(getInfoLabel());
 		
+		JPanel topscorerPanel = new JPanel();
+		setTopscorerButton(new JButton("Hent toppscorere"));
+		getTopscorerButton().setToolTipText("Henter topp 10 toppscorere");
+		topscorerPanel.add(getTopscorerButton());
+		setTopscorerDropdown(new JComboBox<String>());
+		topscorerPanel.add(getTopscorerDropdown());
+		topscorerPanel.setBorder(new TitledBorder("Hent toppscorerliste"));
+		
+		buttonPanel.add(topscorerPanel, BorderLayout.SOUTH);
 		
 		dangerZoneEditorPane = new JEditorPane("text/html", "");
 		dangerZoneEditorPane.setSize(new Dimension(500, 500));
@@ -342,6 +353,34 @@ public class Gui {
 	 */
 	public void setLeagueUrls(JComboBox<String> leagueUrls) {
 		this.leagueUrls = leagueUrls;
+	}
+
+	/**
+	 * @return the topscorerButton
+	 */
+	public JButton getTopscorerButton() {
+		return topscorerButton;
+	}
+
+	/**
+	 * @param topscorerButton the topscorerButton to set
+	 */
+	public void setTopscorerButton(JButton topscorerButton) {
+		this.topscorerButton = topscorerButton;
+	}
+
+	/**
+	 * @return the topscorerDropdown
+	 */
+	public JComboBox<String> getTopscorerDropdown() {
+		return topscorerDropdown;
+	}
+
+	/**
+	 * @param topscorerDropdown the topscorerDropdown to set
+	 */
+	public void setTopscorerDropdown(JComboBox<String> topscorerDropdown) {
+		this.topscorerDropdown = topscorerDropdown;
 	}
 
 }
