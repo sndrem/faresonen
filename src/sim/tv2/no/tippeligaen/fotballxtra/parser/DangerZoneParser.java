@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6604efa88646ea0738575ca3ce0e97c6e2d1df98
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,37 +21,44 @@ import org.jsoup.select.Elements;
 
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
+import sim.tv2.no.tippeligaen.fotballxtra.team.Team;
 
 public class DangerZoneParser {
 
 	private List<Player> players;
 	private HashSet<String> teamNames;
-	private List<String> teams;
+	private HashMap<String, Team> teams;
 	private List<Match> matchList;
-	
-	public static void main(String[] args) {
-		new DangerZoneParser();
-
-	}
-	
+		
 	
 	public DangerZoneParser() {
 //		dbConn = DatabaseConnection.getInstance();
 		setPlayers(new ArrayList<Player>());
 		setTeamNames(new HashSet<String>());
 		setMatchList(new ArrayList<Match>());
-		setTeams(new ArrayList<String>());
+		setTeams(new HashMap<String, Team>());
 				
 		
 	}
 	
-	
-	public List<Match> getNextMatches(String url) {
+	/**
+	 * Method to retrieve the next matches for a league based on an url
+	 * @param url the url for the league from altomfotball.no
+	 * @return a list with the next matches
+	 * @throws IndexOutOfBoundsException
+	 */
+	public List<Match> getNextMatches(String url) throws IndexOutOfBoundsException {
 		try {
 			Document doc = Jsoup.connect(url).get();
 			Elements nextMatches = doc.getElementsByAttributeValue("id", "sd_fixtures_table_next");
 			
-			Elements matches = nextMatches.get(0).getElementsByTag("tr");
+			Elements matches = null;
+			try {
+				
+				matches = nextMatches.get(0).getElementsByTag("tr");
+			} catch (IndexOutOfBoundsException ex) {
+				throw new IndexOutOfBoundsException("Kunne ikke hente neste kamper");
+			}
 		
 			for(Element match : matches) {
 
@@ -65,7 +76,8 @@ public class DangerZoneParser {
 				Elements arenas = matchPage.select(".sd_game_small").select(".sd_game_home");
 				Elements roundAndDate = matchPage.select(".sd_game_small").select(".sd_game_away");
 				// Get the date for the game
-				String date = roundAndDate.text().split(" ")[4];
+				String[] dateArray = roundAndDate.text().split(" ");	
+				String date = dateArray[dateArray.length - 3];
 				Element matchDetails = matchPage.getElementById("sd_match_details");
 				Elements refs = matchDetails.select("#sd_match_details > table > tbody > tr > td:nth-child(2) > p");
 				
@@ -108,6 +120,11 @@ public class DangerZoneParser {
 	}
 	
 	
+	/**
+	 * Method to get players in the danger zone
+	 * @param url the url for the league
+	 * @return a string with information about the 
+	 */
 	public String getDangerZonePlayers(String url) {
 		String information = "";
 		try {
@@ -146,22 +163,30 @@ public class DangerZoneParser {
 		        }
 		    });
 			
-			setTeams(new ArrayList<String>());
+			setTeams(new HashMap<String, Team>());
 			for(String t : getTeamNames()) {
-				getTeams().add(t);
-			}
-
-			
-			Collections.sort(getTeams());
-			
-			for(String teamName : getTeams()) {
-				information += "<br/><b>" + teamName + "</b>";
-				for(Player play : getPlayers()) {
-					if(play.getTeam().equalsIgnoreCase(teamName)){
-						information += "<br/>" + play;
+				getTeams().put(t, new Team(t));
+				for(int i = 0; i < getPlayers().size(); i++) {
+					Player player = getPlayers().get(i);
+					if(player.getTeam().equalsIgnoreCase(t)) {
+						getTeams().get(t).addPlayer(player);
 					}
 				}
-				information += "<br/>";
+			}
+
+			ArrayList<Team> teamList = new ArrayList<Team>(getTeams().values());
+			Collections.sort(teamList);
+			
+			for(Team team : teamList) {
+				if(team.getPlayers().size() > 0) {
+					information += "<br/><b>" + team.getTeamName() + "</b>";
+					for(Player play : getPlayers()) {
+						if(play.getTeam().equalsIgnoreCase(team.getTeamName())){
+							information += "<br/>" + play;
+						}
+					}
+					information += "<br/>";
+				}
 			}
 	
 			
@@ -191,7 +216,7 @@ public class DangerZoneParser {
 	/**
 	 * @return the teams
 	 */
-	public List<String> getTeams() {
+	public HashMap<String, Team> getTeams() {
 		return teams;
 	}
 
@@ -199,7 +224,7 @@ public class DangerZoneParser {
 	/**
 	 * @param teams the teams to set
 	 */
-	public void setTeams(List<String> teams) {
+	public void setTeams(HashMap<String, Team> teams) {
 		this.teams = teams;
 	}
 
