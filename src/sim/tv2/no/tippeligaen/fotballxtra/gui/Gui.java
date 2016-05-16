@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
@@ -19,6 +20,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.html.HTMLDocument;
 
 public class Gui {
 
@@ -120,6 +122,10 @@ public class Gui {
 		dangerZoneScrollPane.setViewportBorder(new TitledBorder(null, "Spillere i faresonen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		summaryEditorPane = new JEditorPane("text/html", "");
+		Font font = new Font("Arial", Font.PLAIN, 12);
+		String bodyRule = "body {font-family: " + font.getFamily() + "; " +
+				"font-size: " + font.getSize() + "pt; }";
+		((HTMLDocument) summaryEditorPane.getDocument()).getStyleSheet().addRule(bodyRule);
 		
 		JScrollPane summaryScrollPane = new JScrollPane(summaryEditorPane);
 		summaryScrollPane.setViewportBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Oppsummering etter s\u00F8k", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));

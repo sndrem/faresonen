@@ -143,7 +143,11 @@ public class Match implements Comparable<Match> {
 			info += "Kampen ser du på " + channels;
 		}
 		if(this.referee != "") {
-			info += "<br>" + this.referee;
+			String[] boldText = this.referee.split(":");
+			info += "<br><b>" + boldText[0] + ":</b>";
+			for (int i = 1; i < boldText.length; i++) {
+				info += boldText[i] + " ";
+			}
 		}
 		return info;
 	}
