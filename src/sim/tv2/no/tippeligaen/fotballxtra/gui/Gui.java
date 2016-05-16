@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 
@@ -44,6 +45,8 @@ public class Gui {
 	private JComboBox<String> leagueUrls;
 	private JButton topscorerButton;
 	private JComboBox<String> topscorerDropdown;
+	private JButton tableButton;
+	private JComboBox<String> tableDropdown;
 
 	
 	public Gui() {
@@ -70,7 +73,7 @@ public class Gui {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
-		JPanel buttonPanel = new JPanel();
+		JPanel buttonPanel = new JPanel(new FlowLayout());
 		frame.getContentPane().add(buttonPanel, BorderLayout.NORTH);
 		
 		panel = new JPanel();
@@ -110,8 +113,15 @@ public class Gui {
 		setTopscorerDropdown(new JComboBox<String>());
 		topscorerPanel.add(getTopscorerDropdown());
 		topscorerPanel.setBorder(new TitledBorder("Hent toppscorerliste"));
-		
 		buttonPanel.add(topscorerPanel, BorderLayout.SOUTH);
+		
+		JPanel tablePanel = new JPanel();
+		tablePanel.setBorder(new TitledBorder("Hent tabell"));
+		setTableButton(new JButton("Hent tabell"));
+		tablePanel.add(getTableButton());
+		setTableDropdown(new JComboBox<String>());
+		tablePanel.add(getTableDropdown());
+		buttonPanel.add(tablePanel);
 		
 		dangerZoneEditorPane = new JEditorPane("text/html", "");
 		dangerZoneEditorPane.setSize(new Dimension(500, 500));
@@ -395,6 +405,34 @@ public class Gui {
 	 */
 	public void setTopscorerDropdown(JComboBox<String> topscorerDropdown) {
 		this.topscorerDropdown = topscorerDropdown;
+	}
+
+	/**
+	 * @return the tableButton
+	 */
+	public JButton getTableButton() {
+		return tableButton;
+	}
+
+	/**
+	 * @param tableButton the tableButton to set
+	 */
+	public void setTableButton(JButton tableButton) {
+		this.tableButton = tableButton;
+	}
+
+	/**
+	 * @return the tableDropdown
+	 */
+	public JComboBox<String> getTableDropdown() {
+		return tableDropdown;
+	}
+
+	/**
+	 * @param tableDropdown the tableDropdown to set
+	 */
+	public void setTableDropdown(JComboBox<String> tableDropdown) {
+		this.tableDropdown = tableDropdown;
 	}
 
 }

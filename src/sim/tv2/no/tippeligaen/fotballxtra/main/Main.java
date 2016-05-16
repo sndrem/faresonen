@@ -12,6 +12,8 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import org.jsoup.nodes.Element;
+
 import sim.tv2.no.tippeligaen.fotballxtra.gui.Gui;
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
 import sim.tv2.no.tippeligaen.fotballxtra.parser.DangerZoneParser;
@@ -72,6 +74,7 @@ public class Main {
 		
 		for(String league : this.leagueUrls.keySet()) {
 			gui.getLeagueUrls().addItem(league);
+			gui.getTableDropdown().addItem(league);
 		}
 
 		// Url for toppscorerlister
@@ -97,6 +100,7 @@ public class Main {
 		gui.getClearSearchResultButton().addActionListener(e);
 		gui.getGetMatchesButton().addActionListener(e);
 		gui.getTopscorerButton().addActionListener(e);
+		gui.getTableButton().addActionListener(e);
 }
 
 	/**
@@ -206,6 +210,13 @@ public class Main {
 			e.printStackTrace();
 			gui.showMessage(e.getMessage());
 		}
+	}
+	
+	/**
+	 * Method to show the table 
+	 */
+	public void showTable(Element tableElements) {
+		gui.getSummaryEditorPane().setText(tableElements.toString());
 	}
 	
 	
@@ -329,6 +340,9 @@ private class EventHandler implements ActionListener {
 					e1.printStackTrace();
 					gui.showMessage(e1.getMessage());
 				}
+			// Hent tabell
+			} else if(e.getSource() == gui.getTableButton()) {
+				showTable(parser.getTable(leagueUrls.get(gui.getTableDropdown().getSelectedItem())));
 			}
 		}
 	}

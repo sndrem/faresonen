@@ -224,6 +224,31 @@ public class DangerZoneParser {
 		return topscorers;
 	}
 	
+	/**
+	 * Method to get the table for a given league based on the url
+	 * @param url - the url for the league
+	 * @throws IOEXception
+	 */
+	public Element getTable(String url) {
+		Element table = null;
+		try {
+			Document doc = Jsoup.connect(url).get();
+			table = doc.getElementById("sd_table_wrap").child(0);
+			for(Element previousMatches : table.getElementsByClass("sd_left")) {
+				try {
+					previousMatches.remove();
+				} catch(NullPointerException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return table;
+	}
 	
 	public void reset() {
 		getTeamNames().clear();
