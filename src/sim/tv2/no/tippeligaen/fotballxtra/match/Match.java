@@ -136,12 +136,27 @@ public class Match implements Comparable<Match> {
 	}
 	
 	public String toString() {
-		String info = "<b>" + round + "</b> - <em>" + matchDate + "</em>" + "<br>" + "<span style=\"font-size:15px;\">" + homeTeam + " <span style=\"color:red;\">VS</span> " + awayTeam + " kl. " + time + ".\n<br>" + arena +"</span><br>";
+		
+		String dateOrTime = "";
+		String hasBeenPlayedOnTv = "";
+		if(this.time.contains("-")) {
+			dateOrTime = "<br>Resultat: ";
+			hasBeenPlayedOnTv = "Kampen så du på ";
+		} else {
+			dateOrTime = " Kl. ";
+			hasBeenPlayedOnTv = "Kampen ser du på ";
+		}
+		
+		String info = "<b>" + round + "</b> - <em>" + matchDate + "</em>" 
+				+ "<br>" + "<span style=\"font-size:15px;\">" + homeTeam + " <span style=\"color:red;\">VS</span> " + awayTeam 
+				+ dateOrTime + time 
+				+ "<br>" + arena +"</span><br>";
 		
 		// Hvis kampen går på en kanal, vis kanalen også
 		if(this.channels.length() > 2) {
-			info += "Kampen ser du på " + channels;
+			info += hasBeenPlayedOnTv + channels;
 		}
+		
 		if(this.referee != "") {
 			String[] boldText = this.referee.split(":");
 			info += "<br><b>" + boldText[0] + ":</b>";

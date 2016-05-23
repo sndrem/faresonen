@@ -2,6 +2,8 @@ package sim.tv2.no.tippeligaen.fotballxtra.main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,6 +59,7 @@ public class Main {
 		leagueUrls = new HashMap<String, String>();
 		topscorerUrls = new HashMap<String, String>();
 		setupLeagueUrls();
+		updateRoundSelector((String) gui.getLeagueUrls().getSelectedItem());
 		setupActionListeners();
 		
 	}
@@ -101,6 +104,9 @@ public class Main {
 		gui.getGetMatchesButton().addActionListener(e);
 		gui.getTopscorerButton().addActionListener(e);
 		gui.getTableButton().addActionListener(e);
+		
+		gui.getLeagueUrls().addItemListener(new ComboBoxEvent());
+		gui.getRoundComboBox().addItemListener(new ComboBoxEvent());
 }
 
 	/**
@@ -113,7 +119,8 @@ public class Main {
 		for(Match match : matches) {
 			summary += "<br><br>" + match.toString() + "<br><br>";
 			gui.getSummaryEditorPane().setText("<p>" + summary + "</p>");
-		}	
+		}
+		gui.getSummaryEditorPane().setCaretPosition(0);
 	}
 	
 	/**
@@ -151,6 +158,7 @@ public class Main {
 				info += "<br/>";
 			}
 			gui.getSummaryEditorPane().setText(info);
+			gui.getSummaryEditorPane().setCaretPosition(0);
 		} else {
 			JOptionPane.showMessageDialog(gui.getFrame(), searchText + " er ikke i faresonen");
 		}
@@ -197,6 +205,7 @@ public class Main {
 				html 	+= "</tbody>"
 						+ "</table>";
 		gui.getSummaryEditorPane().setText(html);
+		gui.getSummaryEditorPane().setCaretPosition(0);
 	}
 	
 	/**
@@ -217,7 +226,47 @@ public class Main {
 	 */
 	public void showTable(Element tableElements) {
 		gui.getSummaryEditorPane().setText(tableElements.toString());
+		gui.getSummaryEditorPane().setCaretPosition(0);
 	}
+	
+	/**
+	 * Method to update the round combobox based upon wheter the rounds are for Tippeligaen, OBOS-ligaen, Premier League etc..
+	 * @param String the type of league
+	 */
+	private void updateRoundSelector(String leagueType) {
+		// Reset round selector first
+		gui.getRoundComboBox().removeAllItems();
+		int numOfRounds = 1;
+		if(leagueType.equalsIgnoreCase("Tippeligaen")) {
+			numOfRounds = 30;
+		} else if(leagueType.equalsIgnoreCase("OBOS-ligaen")) {
+			numOfRounds = 30;
+		} else if (leagueType.equalsIgnoreCase("Premier League")) {
+			numOfRounds = 38;
+		} else if (leagueType.equalsIgnoreCase("Championship")) {
+			numOfRounds = 46;
+		}
+		
+		for(int i = 1; i <= numOfRounds; i++) {
+			gui.getRoundComboBox().addItem(i);
+		}
+	}
+	
+	/**
+	 * Method to return the correct url based on the league name and the round
+	 */
+	private String convertLeagueNameToUrl(String leagueName, Integer round) {
+		if(leagueName.equalsIgnoreCase("Tippeligaen")) {
+			return "http://www.altomfotball.no/elementsCommonAjax.do?cmd=fixturesContent&tournamentId=1&roundNo=" + round  + "&useFullUrl=false";
+		} else if (leagueName.equalsIgnoreCase("OBOS-ligaen")) {
+			return "http://www.altomfotball.no/elementsCommonAjax.do?cmd=fixturesContent&tournamentId=2&roundNo=" + round + "&useFullUrl=false";
+		} else if (leagueName.equalsIgnoreCase("Premier League")) {
+			return "http://www.altomfotball.no/elementsCommonAjax.do?cmd=fixturesContent&tournamentId=230&roundNo=" + round + "&useFullUrl=false";
+		} else if (leagueName.equalsIgnoreCase("Championship")) {
+			return "http://www.altomfotball.no/elementsCommonAjax.do?cmd=fixturesContent&tournamentId=231&roundNo=" + round + "&useFullUrl=false";
+		} else return null;
+	}
+	
 	
 	
 
@@ -322,6 +371,12 @@ private class EventHandler implements ActionListener {
 				
 				String leagueUrl = leagueUrls.get(gui.getLeagueUrls().getSelectedItem());
 				
+				String leagueName = (String) gui.getLeagueUrls().getSelectedItem();
+				Integer round = (Integer) gui.getRoundComboBox().getSelectedItem();
+				
+				leagueUrl = convertLeagueNameToUrl(leagueName, round);
+			
+				
 				try {
 					nextMatches = parser.getNextMatches(leagueUrl.trim());
 					showMatches(nextMatches);
@@ -345,6 +400,23 @@ private class EventHandler implements ActionListener {
 				showTable(parser.getTable(leagueUrls.get(gui.getTableDropdown().getSelectedItem())));
 			}
 		}
+
+		
+	}
+
+	private class ComboBoxEvent implements ItemListener {
+
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			// TODO Auto-generated method stub
+			if(e.getStateChange() == ItemEvent.SELECTED && e.getSource() == gui.getLeagueUrls()) {
+				updateRoundSelector((String) e.getItem());
+			} else if (e.getStateChange() == ItemEvent.SELECTED && e.getSource() == gui.getRoundComboBox()) {
+				// TODO Implementere noe her?
+			}
+			
+		}
+		
 	}
 
 }

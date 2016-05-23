@@ -47,18 +47,9 @@ public class DangerZoneParser {
 	public List<Match> getNextMatches(String url) throws IndexOutOfBoundsException , IOException{
 		try {
 			Document doc = Jsoup.connect(url).get();
-			Elements nextMatches = doc.getElementsByAttributeValue("id", "sd_fixtures_table_next");
+			Elements matches = doc.getElementsByTag("tr");
 			
-			Elements matches = null;
-			try {
-				
-				matches = nextMatches.get(0).getElementsByTag("tr");
-			} catch (IndexOutOfBoundsException ex) {
-				throw new IndexOutOfBoundsException("Kunne ikke hente neste kamper");
-			}
-		
 			for(Element match : matches) {
-
 				String round = match.getElementsByClass("sd_fixtures_round").text();
 				String tournament = match.getElementsByClass("sd_fixtures_tournament").text();
 				String homeTeam = match.getElementsByClass("sd_fixtures_home").text();
@@ -110,7 +101,7 @@ public class DangerZoneParser {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new IOException("Kunne ikke hente neste kamper for. Er du koblet til internett?");
+			throw new IOException("Kunne ikke hente neste kamper for" + url + " Er du koblet til internett?");
 		}
 		return matchList;
 	}

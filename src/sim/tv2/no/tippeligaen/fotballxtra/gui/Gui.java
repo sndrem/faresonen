@@ -47,6 +47,8 @@ public class Gui {
 	private JComboBox<String> topscorerDropdown;
 	private JButton tableButton;
 	private JComboBox<String> tableDropdown;
+	private JPanel getNextMatchesPanel;
+	private JComboBox<Integer> roundComboBox;
 
 	
 	public Gui() {
@@ -89,16 +91,18 @@ public class Gui {
 		panel.add(getLoadAllPlayersButton());
 		
 		
-		JPanel getNextMatchesPanel = new JPanel();
+		setGetNextMatchesPanel(new JPanel());
+		setRoundComboBox(new JComboBox<Integer>());
+		getGetNextMatchesPanel().add(getRoundComboBox());
 		setGetMatchesButton(new JButton("Hent kamper"));
-		getNextMatchesPanel.add(getGetMatchesButton());
+		getGetNextMatchesPanel().add(getGetMatchesButton());
 		setLeagueUrls(new JComboBox<String>());
-		getNextMatchesPanel.add(getLeagueUrls());
-		getNextMatchesPanel.setBorder(new TitledBorder("Hent info om neste kamper"));
+		getGetNextMatchesPanel().add(getLeagueUrls());
+		getGetNextMatchesPanel().setBorder(new TitledBorder("Hent info om neste kamper"));
 		
 		
 		buttonPanel.add(panel);
-		buttonPanel.add(getNextMatchesPanel);
+		buttonPanel.add(getGetNextMatchesPanel());
 		
 		infoPanel = new JPanel();
 		buttonPanel.add(infoPanel, BorderLayout.SOUTH);
@@ -433,6 +437,34 @@ public class Gui {
 	 */
 	public void setTableDropdown(JComboBox<String> tableDropdown) {
 		this.tableDropdown = tableDropdown;
+	}
+
+	/**
+	 * @return the getNextMatchesPanel
+	 */
+	public JPanel getGetNextMatchesPanel() {
+		return getNextMatchesPanel;
+	}
+
+	/**
+	 * @param getNextMatchesPanel the getNextMatchesPanel to set
+	 */
+	public void setGetNextMatchesPanel(JPanel getNextMatchesPanel) {
+		this.getNextMatchesPanel = getNextMatchesPanel;
+	}
+
+	/**
+	 * @return the roundComboBox
+	 */
+	public JComboBox<Integer> getRoundComboBox() {
+		return roundComboBox;
+	}
+
+	/**
+	 * @param roundComboBox the roundComboBox to set
+	 */
+	public void setRoundComboBox(JComboBox<Integer> roundComboBox) {
+		this.roundComboBox = roundComboBox;
 	}
 
 }
