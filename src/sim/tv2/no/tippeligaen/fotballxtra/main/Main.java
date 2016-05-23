@@ -46,7 +46,6 @@ public class Main {
 				new Main();				
 			}
 		};
-
 		SwingUtilities.invokeLater(r);
 	}
 
@@ -121,10 +120,11 @@ public class Main {
 			if(i == 0) {
 				summary += match.toString() + "<br><br>";
 			} else {
-				summary += "<br><br>" + match.toString() + "<br><br>";
+				summary += match.toString() + "<br><br>";
 			}
-			gui.getSummaryEditorPane().setText("<p>" + summary + "</p>");
 		}
+		summary += "</table>";
+		gui.getSummaryEditorPane().setText("<p>" + summary + "</p>");
 		gui.getSummaryEditorPane().setCaretPosition(0);
 	}
 	

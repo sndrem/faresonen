@@ -4,6 +4,7 @@ package sim.tv2.no.tippeligaen.fotballxtra.match;
 public class Match implements Comparable<Match> {
 
 	private String matchDate, homeTeam, awayTeam, tournament, time, channels, referee, arena, matchUrl, round;
+	private boolean isPlayed = false;
 	
 	
 	// TODO Lagre url for kampene slik at vi kan direkte til de
@@ -27,6 +28,10 @@ public class Match implements Comparable<Match> {
 		this.time = time;
 		this.channels = channels;
 		this.round = round;
+		
+		if(this.time.contains("-")) {
+			this.setPlayed(true);
+		}
 	}
 
 
@@ -137,33 +142,38 @@ public class Match implements Comparable<Match> {
 	
 	public String toString() {
 		
-		String dateOrTime = "";
 		String hasBeenPlayedOnTv = "";
-		if(this.time.contains("-")) {
-			dateOrTime = "<br>Resultat: ";
+		String info = "";
+		
+		// hvis time inneholder bindestrek da er det et resultat og dermed har kampen blitt spilt
+		if(isPlayed()) {
 			hasBeenPlayedOnTv = "Kampen så du på ";
+			
+			info = "<b>" + homeTeam + " " + time + " " + awayTeam + "</b><br><hr>";
 		} else {
-			dateOrTime = " Kl. ";
-			hasBeenPlayedOnTv = "Kampen ser du på ";
-		}
-		
-		String info = "<b>" + round + "</b> - <em>" + matchDate + "</em>" 
-				+ "<br>" + "<span style=\"font-size:15px;\">" + homeTeam + " <span style=\"color:red;\">VS</span> " + awayTeam 
-				+ dateOrTime + time 
-				+ "<br>" + arena +"</span><br>";
-		
-		// Hvis kampen går på en kanal, vis kanalen også
-		if(this.channels.length() > 2) {
-			info += hasBeenPlayedOnTv + channels;
-		}
-		
-		if(this.referee != "") {
-			String[] boldText = this.referee.split(":");
-			info += "<br><b>" + boldText[0] + ":</b>";
-			for (int i = 1; i < boldText.length; i++) {
-				info += boldText[i] + " ";
+//			hasBeenPlayedOnTv = " på ";
+			// Hvis kampen går på en kanal, vis kanalen også
+			if(this.channels.length() > 2) {
+				hasBeenPlayedOnTv += "<span style=\"text-align:center;\">" + this.channels + "</span>";
 			}
+			
+			if(this.referee != "") {
+				String[] boldText = this.referee.split(":");
+				info += "<br><b>" + boldText[0] + ":</b>";
+				for (int i = 1; i < boldText.length; i++) {
+					info += boldText[i] + " ";
+				}
+			}
+			
+			info = 	"<b>Avspark kl. " + this.time + " " + hasBeenPlayedOnTv + "</b><br>"
+					+ homeTeam + " - " + awayTeam + ", " + this.arena + "<br>"
+					+ "<p style=\"text-align:right;\"<b>Reporter: </b><br>"
+					+ "<b>Kommentator(er): </b><br>"
+					+ "<b>Arenaekspert: </b><br>"
+					+ "<b>Studioekspert: </b><br>"
+					+ "<b>Dommer: " + this.referee + "</p><hr>";			
 		}
+		
 		return info;
 	}
 
@@ -200,5 +210,21 @@ public class Match implements Comparable<Match> {
 	public int compareTo(Match o) {
 		Match matchToCompare = o;
 		return this.matchDate.compareTo(matchToCompare.getMatchDate());
+	}
+
+
+	/**
+	 * @return the isPlayed
+	 */
+	public boolean isPlayed() {
+		return isPlayed;
+	}
+
+
+	/**
+	 * @param isPlayed the isPlayed to set
+	 */
+	public void setPlayed(boolean isPlayed) {
+		this.isPlayed = isPlayed;
 	}
 }
