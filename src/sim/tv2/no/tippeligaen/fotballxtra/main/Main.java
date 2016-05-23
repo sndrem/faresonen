@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -74,7 +75,6 @@ public class Main {
 		this.leagueUrls.put("Premier League", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=230&useFullUrl=false");
 		this.leagueUrls.put("Championship", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=231&useFullUrl=false");
 		
-		
 		for(String league : this.leagueUrls.keySet()) {
 			gui.getLeagueUrls().addItem(league);
 			gui.getTableDropdown().addItem(league);
@@ -116,8 +116,13 @@ public class Main {
 	private void showMatches(List<Match> matches) {
 		String summary = "";
 		gui.getInfoLabel().setText("Hentet " + matches.size() + " kamper" );
-		for(Match match : matches) {
-			summary += "<br><br>" + match.toString() + "<br><br>";
+		for(int i = 0; i < matches.size(); i++) {
+			Match match = matches.get(i);
+			if(i == 0) {
+				summary += match.toString() + "<br><br>";
+			} else {
+				summary += "<br><br>" + match.toString() + "<br><br>";
+			}
 			gui.getSummaryEditorPane().setText("<p>" + summary + "</p>");
 		}
 		gui.getSummaryEditorPane().setCaretPosition(0);
@@ -137,9 +142,7 @@ public class Main {
 			for(Player play : parser.getPlayers()) {
 				if(play.getName().toLowerCase().contains(searchText)) {
 					playList.add(play);
-				} else {
-					
-				}
+				} 
 			}
 		}
 		return playList;
@@ -209,20 +212,8 @@ public class Main {
 	}
 	
 	/**
-	 * Method to get the top scorer
-	 */
-	public void getTopscorers(String url) {
-		try {
-			parser.getTopscorers(url);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			gui.showMessage(e.getMessage());
-		}
-	}
-	
-	/**
-	 * Method to show the table 
+	 * Method to show the Table
+	 * @parar Element JSoup element 
 	 */
 	public void showTable(Element tableElements) {
 		gui.getSummaryEditorPane().setText(tableElements.toString());
@@ -368,13 +359,11 @@ private class EventHandler implements ActionListener {
 				parser.getMatchList().clear();
 				List<Match> nextMatches = null;
 				gui.getSummaryEditorPane().setText("");
-				
-				String leagueUrl = leagueUrls.get(gui.getLeagueUrls().getSelectedItem());
-				
+								
 				String leagueName = (String) gui.getLeagueUrls().getSelectedItem();
 				Integer round = (Integer) gui.getRoundComboBox().getSelectedItem();
 				
-				leagueUrl = convertLeagueNameToUrl(leagueName, round);
+				String leagueUrl = convertLeagueNameToUrl(leagueName, round);
 			
 				
 				try {
