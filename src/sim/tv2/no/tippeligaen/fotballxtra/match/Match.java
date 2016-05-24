@@ -1,5 +1,7 @@
 package sim.tv2.no.tippeligaen.fotballxtra.match;
 
+import sim.tv2.no.tippeligaen.fotballxtra.utilities.TeamUtilities;
+
 
 public class Match implements Comparable<Match> {
 
@@ -140,41 +142,61 @@ public class Match implements Comparable<Match> {
 		this.arena = arena;
 	}
 	
-	public String toString() {
-		
+	/**
+	 * Returns a formatted text string if the match has already been played. If the match has been played, we do not care about which channel etc...
+	 * @return a formatted text string
+	 */
+	public String getMatchIsPlayedInfo() {
+		return  "<p style=\"font-weight: bold; text-align:center;\">" + homeTeam + " " + time + " " + awayTeam + "</p>"
+				+ "<p style=\"text-align:left;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(homeTeam) + ": </span><span style=\"font-weight: normal;\"></span></p>"
+				+ "<p style=\"text-align:left; border-bottom: 1px solid black;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(awayTeam) + ": </span><span style=\"font-weight: normal;\"></span></p>";
+	}
+	
+	/**
+	 * Returns match info if the match has not been played before
+	 * @return a formatted text string of the match has not been played
+	 */
+	public String getMatchInfo() {
 		String hasBeenPlayedOnTv = "";
 		String info = "";
 		
-		// hvis time inneholder bindestrek da er det et resultat og dermed har kampen blitt spilt
-		if(isPlayed()) {
-			hasBeenPlayedOnTv = "Kampen så du på ";
-			
-			info = "<b>" + homeTeam + " " + time + " " + awayTeam + "</b><br><hr>";
-		} else {
-//			hasBeenPlayedOnTv = " på ";
-			// Hvis kampen går på en kanal, vis kanalen også
-			if(this.channels.length() > 2) {
-				hasBeenPlayedOnTv += "<span style=\"text-align:center;\">" + this.channels + "</span>";
-			}
-			
-			if(this.referee != "") {
-				String[] boldText = this.referee.split(":");
-				info += "<br><b>" + boldText[0] + ":</b>";
-				for (int i = 1; i < boldText.length; i++) {
-					info += boldText[i] + " ";
-				}
-			}
-			
-			info = 	"<b>Avspark kl. " + this.time + " " + hasBeenPlayedOnTv + "</b><br>"
-					+ homeTeam + " - " + awayTeam + ", " + this.arena + "<br>"
-					+ "<p style=\"text-align:right;\"<b>Reporter: </b><br>"
-					+ "<b>Kommentator(er): </b><br>"
-					+ "<b>Arenaekspert: </b><br>"
-					+ "<b>Studioekspert: </b><br>"
-					+ "<b>Dommer: " + this.referee + "</p><hr>";			
+		// Hvis kampen går på en kanal, vis kanalen også
+		if(this.channels.length() > 2) {
+			hasBeenPlayedOnTv += "<span style=\"text-align:center;\">" + this.channels + "</span>";
 		}
 		
+//			if(this.referee != "") {
+//				String[] boldText = this.referee.split(":");
+//				info += "<br><b>" + boldText[0] + ":</b>";
+//				for (int i = 1; i < boldText.length; i++) {
+//					info += boldText[i] + " ";
+//				}
+//			}
+		
+		info = 	"Avspark kl. " + this.time + " " + hasBeenPlayedOnTv + "<br>"
+				+ "<b style=\"font-size:11px;\">" + homeTeam + " - " + awayTeam + ", " + this.arena + "</b><br>"
+				+ "<p style=\"text-align:right; border-bottom: 1px solid black;\"<b>Reporter: </b><br>"
+				+ "<b>Kommentator(er): </b><br>"
+				+ "<b>Arenaekspert: </b><br>"
+				+ "<b>Studioekspert: </b><br>"
+				+ "<b>Dommer: <span style=\"font-weight:normal;\">" + this.referee + "</span></p>";			
 		return info;
+	}
+	
+	/**
+	 * Returns a formatted text string if the match is for the next round
+	 * @return a formatted text string if the match is for the next round
+	 */
+	public String getNextRoundMatchInfo() {
+		return  "<td>" + this.matchDate + "</td>"
+				+ "<td>" + this.round + "<td>"
+				+ "<td></td>"
+				+ "<td>" + toString() + "</td>"
+				+ "<td>" + this.channels + "</td>";
+	}
+		
+	public String toString() {
+		return this.homeTeam + " " + this.time + " " + this.awayTeam;
 	}
 
 	/**

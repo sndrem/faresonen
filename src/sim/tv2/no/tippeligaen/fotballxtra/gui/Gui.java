@@ -4,11 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -53,6 +53,7 @@ public class Gui {
 	private JPanel getNextMatchesPanel;
 	private JComboBox<Integer> roundComboBox;
 	private JMenuItem printItem;
+	private JCheckBox formatMatchesChkBox;
 
 	
 	public Gui() {
@@ -79,7 +80,7 @@ public class Gui {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
-		JPanel buttonPanel = new JPanel(new FlowLayout());
+		JPanel buttonPanel = new JPanel(new GridLayout(2,2));
 		frame.getContentPane().add(buttonPanel, BorderLayout.NORTH);
 		
 		panel = new JPanel();
@@ -95,13 +96,15 @@ public class Gui {
 		panel.add(getLoadAllPlayersButton());
 		
 		
-		setGetNextMatchesPanel(new JPanel());
-		setRoundComboBox(new JComboBox<Integer>());
-		getGetNextMatchesPanel().add(getRoundComboBox());
-		setGetMatchesButton(new JButton("Hent kamper"));
-		getGetNextMatchesPanel().add(getGetMatchesButton());
+		setGetNextMatchesPanel(new JPanel(new GridLayout(2,2)));
 		setLeagueUrls(new JComboBox<String>());
 		getGetNextMatchesPanel().add(getLeagueUrls());
+		setRoundComboBox(new JComboBox<Integer>());
+		getGetNextMatchesPanel().add(getRoundComboBox());
+		setFormatMatchesChkBox(new JCheckBox("Formater for neste runde"));
+		getGetNextMatchesPanel().add(getFormatMatchesChkBox());
+		setGetMatchesButton(new JButton("Hent kamper"));
+		getGetNextMatchesPanel().add(getGetMatchesButton());
 		getGetNextMatchesPanel().setBorder(new TitledBorder("Hent info om neste kamper"));
 		
 		
@@ -193,6 +196,7 @@ public class Gui {
 		
 		setPrintItem(new JMenuItem("Print"));
 		menu.add(getPrintItem());
+		getPrintItem().setEnabled(false);
 		
 		frame.setJMenuBar(menuBar);
 	}
@@ -500,6 +504,20 @@ public class Gui {
 	 */
 	public void setPrintItem(JMenuItem printItem) {
 		this.printItem = printItem;
+	}
+
+	/**
+	 * @return the formatMatchesChkBox
+	 */
+	public JCheckBox getFormatMatchesChkBox() {
+		return formatMatchesChkBox;
+	}
+
+	/**
+	 * @param formatMatchesChkBox the formatMatchesChkBox to set
+	 */
+	public void setFormatMatchesChkBox(JCheckBox formatMatchesChkBox) {
+		this.formatMatchesChkBox = formatMatchesChkBox;
 	}
 
 }

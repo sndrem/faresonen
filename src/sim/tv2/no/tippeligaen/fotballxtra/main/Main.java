@@ -113,16 +113,39 @@ public class Main {
 	 * Metode for å vise kampene som brukeren ber om
 	 * @param matches
 	 */
-	private void showMatches(List<Match> matches) {
+	private void showMatches(List<Match> matches, boolean nextRound) {
 		String summary = "";
+		if(nextRound) {
+			summary = "<table><thead>"
+					+ "<tr><td colspan=\"3\">Neste runde</td></tr>"
+					+ "<tr>"
+					+ "<th>Dato</th>"
+					+ "<th>Runde</th>"
+					+ "<th></th>"
+					+ "<th></th>"
+					+ "<th>Kamp</th>"
+					+ "<th>Kanal</th>"
+					+ "</tr>"
+					+ "</thead></tbody>";
+		}
 		gui.getInfoLabel().setText("Hentet " + matches.size() + " kamper" );
 		for(int i = 0; i < matches.size(); i++) {
 			Match match = matches.get(i);
-			if(i == 0) {
-				summary += match.toString() + "<br><br>";
-			} else {
-				summary += match.toString() + "<br><br>";
+			
+			if(!nextRound) {
+				if(match.isPlayed()) {
+					summary += match.getMatchIsPlayedInfo();
+				} else {
+					summary += match.getMatchInfo();
+				} 
+			} else if(nextRound) {
+				summary += "<tr\">";
+				summary += match.getNextRoundMatchInfo();
+				summary += "</tr>";
 			}
+		}
+		if(nextRound) {
+			summary += "</tbody></table>";
 		}
 		gui.getSummaryEditorPane().setText(summary);
 		gui.getSummaryEditorPane().setCaretPosition(0);
@@ -368,11 +391,12 @@ private class EventHandler implements ActionListener {
 				
 				try {
 					nextMatches = parser.getNextMatches(leagueUrl.trim());
-					showMatches(nextMatches);
+					showMatches(nextMatches, gui.getFormatMatchesChkBox().isSelected());
 				} catch(IndexOutOfBoundsException exe) {
 					gui.getInfoLabel().setText("Kunne ikke hente kamper for " + gui.getLeagueUrls().getSelectedItem());
 				} catch(IOException exe) {
 					gui.showMessage(exe.getMessage());
+					gui.getStatusLabel().setText("Hentet kamper: 0");
 				}
 			// Hent toppscorere
 			} else if(e.getSource() == gui.getTopscorerButton()) {
