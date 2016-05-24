@@ -117,14 +117,14 @@ public class Main {
 		String summary = "";
 		if(nextRound) {
 			summary = "<table><thead>"
-					+ "<tr><td colspan=\"3\">Neste runde</td></tr>"
+					+ "<tr><th align=\"left\" colspan=\"3\">Neste runde</th></tr>"
 					+ "<tr>"
-					+ "<th>Dato</th>"
-					+ "<th>Runde</th>"
+					+ "<th align=\"left\">Dato</th>"
+					+ "<th align=\"left\">Runde</th>"
 					+ "<th></th>"
 					+ "<th></th>"
-					+ "<th>Kamp</th>"
-					+ "<th>Kanal</th>"
+					+ "<th align=\"left\">Kamp</th>"
+					+ "<th align=\"left\">Kanal</th>"
 					+ "</tr>"
 					+ "</thead></tbody>";
 		}
