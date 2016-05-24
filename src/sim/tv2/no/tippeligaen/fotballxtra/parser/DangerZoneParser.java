@@ -15,6 +15,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import sim.tv2.no.tippeligaen.fotballxtra.goal.Goal;
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Topscorer;
@@ -26,18 +27,18 @@ public class DangerZoneParser {
 	private HashSet<String> teamNames;
 	private HashMap<String, Team> teams;
 	private List<Match> matchList;
-		
-	
+
+
 	public DangerZoneParser() {
-//		dbConn = DatabaseConnection.getInstance();
+		//		dbConn = DatabaseConnection.getInstance();
 		setPlayers(new ArrayList<Player>());
 		setTeamNames(new HashSet<String>());
 		setMatchList(new ArrayList<Match>());
 		setTeams(new HashMap<String, Team>());
-				
-		
+
+
 	}
-	
+
 	/**
 	 * Method to retrieve the next matches for a league based on an url
 	 * @param url the url for the league from altomfotball.no
@@ -45,10 +46,12 @@ public class DangerZoneParser {
 	 * @throws IndexOutOfBoundsException
 	 */
 	public List<Match> getNextMatches(String url) throws IndexOutOfBoundsException , IOException{
+		List<Player> homeScorers = new ArrayList<Player>();
+		List<Player> awayScorers = new ArrayList<Player>();
 		try {
 			Document doc = Jsoup.connect(url).get();
 			Elements matches = doc.getElementsByTag("tr");
-			
+
 			for(Element match : matches) {
 				String round = match.getElementsByClass("sd_fixtures_round").text();
 				String tournament = match.getElementsByClass("sd_fixtures_tournament").text();
@@ -56,10 +59,64 @@ public class DangerZoneParser {
 				String awayTeam = match.getElementsByClass("sd_fixtures_away").text();
 				String time = match.getElementsByClass("sd_fixtures_score").text();
 				String channels = match.getElementsByClass("sd_fixtures_channels").text();
-				
+
 				String matchUrl = "http://altomfotball.no/" + match.getElementsByClass("sd_fixtures_score").tagName("a").attr("href");
 				Document matchPage = Jsoup.connect(matchUrl).get();
+
+				//				System.out.println(matchPage);
+
+				// TODO Finn målscorere
+				Elements events = matchPage.select("#sd_match_stats tr");
+				Element homeTeamScorer = null, awayTeamScorer = null;
+				int goalTime = 0;
+				for(Element eventRow : events) {
+					Element homeTeamEvent = eventRow.children().first();
+					Element awayTeamEvent = eventRow.children().last();
+					Element eventTime = eventRow.children().get(1);
+					
+					try {
+						goalTime = Integer.parseInt(eventTime.text());
+					} catch(NumberFormatException e) {
+
+					}
+
+
+					try {
+						String attrText = homeTeamEvent.child(0).attr("style");
+						if(isGoalScorerElement(attrText)) {
+							homeTeamScorer = homeTeamEvent;
+							System.out.println("Hjemmelagsscorer: " + homeTeamScorer.text() + " tid: " + goalTime);
+						}
+					} catch(IndexOutOfBoundsException e) {
+						
+					}
+					
+					try {
+						String attrText = awayTeamEvent.child(0).attr("style");
+						if(isGoalScorerElement(attrText)) {
+							awayTeamScorer = awayTeamEvent;
+							System.out.println("Bortelagsscorer: " + awayTeamScorer.text() + " tid: " + goalTime);
+							}
+						} catch(IndexOutOfBoundsException e) {
+							
+						}
+					
+					if(homeTeamScorer != null) {
+						Player homePlayer = new Player("", homeTeamScorer.text(), "", 0, 0, "");
+						homePlayer.getGoalList().add(new Goal(homePlayer, goalTime));
+						homeScorers.add(homePlayer);
+					}
+					
+					if(awayTeamScorer != null) {
+						Player awayPlayer = new Player("", awayTeamScorer.text(), "", 0, 0, "");
+						awayPlayer.getGoalList().add(new Goal(awayPlayer, goalTime));
+						awayScorers.add(awayPlayer);
+					}
+				}
 				
+				
+				
+
 				// TODO Hent bare ut dommeren
 				Elements arenas = matchPage.select(".sd_game_small").select(".sd_game_home");
 				Elements roundAndDate = matchPage.select(".sd_game_small").select(".sd_game_away");
@@ -68,23 +125,25 @@ public class DangerZoneParser {
 				String date = dateArray[dateArray.length - 3];
 				Element matchDetails = matchPage.getElementById("sd_match_details");
 				Elements refs = matchDetails.select("#sd_match_details > table > tbody > tr > td:nth-child(2) > p");
-				
+
 				Pattern regexPattern = Pattern.compile("(.{1}).*?Assistentdommere:");
 				Matcher regexMatcher = regexPattern.matcher(refs.text());
-				
+
 				String referee = "";
 				while(regexMatcher.find()) {
 					if(regexMatcher.group().length() != 0) {
 						referee = regexMatcher.group().replaceAll(" Assistentdommere:", "");
 					}
 				}
-								
+
 				String[] arenaText = null;
 				for(Element arena : arenas) {
 					arenaText = arena.text().split(" ");
 				}
 
 				Match matchToList = new Match(date, homeTeam, awayTeam, tournament, time.split(" ")[0], channels, round);
+				matchToList.setHomeScorers(homeScorers);
+				matchToList.setAwayScorers(awayScorers);
 				String arena = "";
 				for(String s : arenaText) {
 					if(!s.equals("Kampen")) {
@@ -94,10 +153,10 @@ public class DangerZoneParser {
 				matchToList.setArena(arena);
 				matchToList.setReferee(referee);
 				getMatchList().add(matchToList);
-				
+
 			}
-			
-						
+
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -106,7 +165,23 @@ public class DangerZoneParser {
 		return matchList;
 	}
 	
-	
+	/**
+	 * Method to check if a text string contains symbols related to goals scorers from alt om fotball
+	 * @return true if the string marks a goal scorer, false otherwise
+	 */
+	private boolean isGoalScorerElement(String symbolPath) {
+		if(symbolPath.contains("graphics/eventIcon3/3")) {
+			return true;
+		} else if(symbolPath.contains("graphics/eventIcon3/6")) {
+			return true;
+		} else if(symbolPath.contains("graphics/eventIcon3/7")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
 	/**
 	 * Method to get players in the danger zone
 	 * @param url the url for the league
@@ -118,7 +193,7 @@ public class DangerZoneParser {
 			Document doc = Jsoup.connect(url).get();
 			Elements playerTable = doc.getElementsByTag("tbody");
 			Elements playerRows = playerTable.get(0).getElementsByTag("tr");
-			
+
 			for(Element e : playerRows) {
 				String[] playerData = e.text().split(" ");
 				String number = playerData[0];
@@ -131,7 +206,7 @@ public class DangerZoneParser {
 				} else if (team.contains("Sarpsborg")) {
 					team = "Sarpsborg 08";
 				}
-				
+
 				int yellowCards = Integer.parseInt(playerData[3]);
 				int matches = Integer.parseInt(playerData[4]);
 				String average = playerData[5];
@@ -141,15 +216,15 @@ public class DangerZoneParser {
 					getPlayers().add(player);
 				}
 			}
-			
-			Collections.sort(getPlayers(), new Comparator<Player>() {
-		        @Override
-		        public int compare(Player player1, Player player2){
 
-		            return  player1.getTeam().compareTo(player2.getTeam());
-		        }
-		    });
-			
+			Collections.sort(getPlayers(), new Comparator<Player>() {
+				@Override
+				public int compare(Player player1, Player player2){
+
+					return  player1.getTeam().compareTo(player2.getTeam());
+				}
+			});
+
 			setTeams(new HashMap<String, Team>());
 			for(String t : getTeamNames()) {
 				getTeams().put(t, new Team(t));
@@ -163,7 +238,7 @@ public class DangerZoneParser {
 
 			ArrayList<Team> teamList = new ArrayList<Team>(getTeams().values());
 			Collections.sort(teamList);
-			
+
 			for(Team team : teamList) {
 				if(team.getPlayers().size() > 0) {
 					information += "<br/><b>" + team.getTeamName() + "</b>";
@@ -175,9 +250,9 @@ public class DangerZoneParser {
 					information += "<br/>";
 				}
 			}
-	
-			
-			
+
+
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -186,7 +261,7 @@ public class DangerZoneParser {
 
 		return information;
 	}
-	
+
 	/**
 	 * Method to get top 10 topscorers for a given league based on the url
 	 * @param url - the url for the league
@@ -204,17 +279,17 @@ public class DangerZoneParser {
 				int numMatches = Integer.parseInt(playerRow.get(i).child(4).text());
 				String avg = playerRow.get(i).child(5).text().replace(",", ".");;
 				double goalAvg = Double.parseDouble(avg);
-				
+
 				topscorers.add(new Topscorer(playerName, team, goals, numMatches, goalAvg));
 			}
 		} catch(IOException e) {
 			e.printStackTrace();
 			throw new IOException("Kunne ikke hente toppscorere. Er du koblet til internett?");
 		}
-		
+
 		return topscorers;
 	}
-	
+
 	/**
 	 * Method to get the table for a given league based on the url
 	 * @param url - the url for the league
@@ -232,21 +307,21 @@ public class DangerZoneParser {
 					e.printStackTrace();
 				}
 			}
-			
-			
+
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return table;
 	}
-	
+
 	public void reset() {
 		getTeamNames().clear();
 		getTeams().clear();
 		getPlayers().clear();
 	}
-	
+
 	public boolean isEvenNumber(int number) {
 		if((number % 2) == 0) {
 			return true;

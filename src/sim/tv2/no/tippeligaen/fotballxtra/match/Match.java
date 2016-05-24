@@ -1,5 +1,9 @@
 package sim.tv2.no.tippeligaen.fotballxtra.match;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
 import sim.tv2.no.tippeligaen.fotballxtra.utilities.TeamUtilities;
 
 
@@ -7,6 +11,7 @@ public class Match implements Comparable<Match> {
 
 	private String matchDate, homeTeam, awayTeam, tournament, time, channels, referee, arena, matchUrl, round;
 	private boolean isPlayed = false;
+	private List<Player> homeScorers, awayScorers;
 	
 	
 	// TODO Lagre url for kampene slik at vi kan direkte til de
@@ -34,6 +39,8 @@ public class Match implements Comparable<Match> {
 		if(this.time.contains("-")) {
 			this.setPlayed(true);
 		}
+		this.setHomeScorers(new ArrayList<Player>());
+		this.setAwayScorers(new ArrayList<Player>());
 	}
 
 
@@ -147,9 +154,16 @@ public class Match implements Comparable<Match> {
 	 * @return a formatted text string
 	 */
 	public String getMatchIsPlayedInfo() {
-		return  "<p style=\"font-weight: bold; text-align:center;\">" + homeTeam + " " + time + " " + awayTeam + "</p>"
-				+ "<p style=\"text-align:left;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(homeTeam) + ": </span><span style=\"font-weight: normal;\"></span></p>"
+		String info = "<p style=\"font-weight: bold; text-align:center;\">" + homeTeam + " " + time + " " + awayTeam + "</p>"
+				+ "<p style=\"text-align:left;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(homeTeam) + ": </span><span style=\"font-weight: normal;\">"
+				+ "</span>";
+				for(Player player : homeScorers) {
+					info += player.getGoalString() + " ";
+				}
+			info += "</p>"
 				+ "<p style=\"text-align:left; border-bottom: 1px solid black;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(awayTeam) + ": </span><span style=\"font-weight: normal;\"></span></p>";
+		
+		return info;
 	}
 	
 	/**
@@ -248,5 +262,37 @@ public class Match implements Comparable<Match> {
 	 */
 	public void setPlayed(boolean isPlayed) {
 		this.isPlayed = isPlayed;
+	}
+
+
+	/**
+	 * @return the homeScorers
+	 */
+	public List<Player> getHomeScorers() {
+		return homeScorers;
+	}
+
+
+	/**
+	 * @param homeScorers the homeScorers to set
+	 */
+	public void setHomeScorers(List<Player> homeScorers) {
+		this.homeScorers = homeScorers;
+	}
+
+
+	/**
+	 * @return the awayScorers
+	 */
+	public List<Player> getAwayScorers() {
+		return awayScorers;
+	}
+
+
+	/**
+	 * @param awayScorers the awayScorers to set
+	 */
+	public void setAwayScorers(List<Player> awayScorers) {
+		this.awayScorers = awayScorers;
 	}
 }

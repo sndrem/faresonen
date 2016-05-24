@@ -1,10 +1,16 @@
 package sim.tv2.no.tippeligaen.fotballxtra.player;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import sim.tv2.no.tippeligaen.fotballxtra.goal.Goal;
+
 public class Player implements Comparable<String> {
 	
 	private int yellowCards, matches;
 	private String name, team, number;
 	private String average;
+	private List<Goal> goalList;
 	
 	public Player(String number, String name, String team, int yellowCards, int matches, String average) {
 		this.number = number;
@@ -13,10 +19,20 @@ public class Player implements Comparable<String> {
 		this.yellowCards = yellowCards;
 		this.matches = matches;
 		this.average = average;
+		this.goalList = new ArrayList<Goal>();
 	}
+
 	
 	public String toString() {
 		return this.name + ", " + this.yellowCards + " gule";
+	}
+	
+	public String getGoalString() {
+		String info = "";
+		for(Goal goal : goalList) {
+			info += goal.getGoalScorer().getName() + "(" + goal.getTime() + "), ";
+		}
+		return info;
 	}
 
 	/**
@@ -107,9 +123,20 @@ public class Player implements Comparable<String> {
 	public int compareTo(String o) {
 		return this.team.compareTo(o);
 	}
-	
-	
 
-	
 
+	/**
+	 * @return the goalList
+	 */
+	public List<Goal> getGoalList() {
+		return goalList;
+	}
+
+
+	/**
+	 * @param goalList the goalList to set
+	 */
+	public void setGoalList(List<Goal> goalList) {
+		this.goalList = goalList;
+	}
 }
