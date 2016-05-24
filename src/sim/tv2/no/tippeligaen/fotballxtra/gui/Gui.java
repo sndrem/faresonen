@@ -147,6 +147,7 @@ public class Gui {
 		String bodyRule = "body {font-family: " + font.getFamily() + "; " +
 				"font-size: " + font.getSize() + "pt; }";
 		((HTMLDocument) summaryEditorPane.getDocument()).getStyleSheet().addRule(bodyRule);
+		((HTMLDocument) dangerZoneEditorPane.getDocument()).getStyleSheet().addRule(bodyRule);
 		
 		JScrollPane summaryScrollPane = new JScrollPane(summaryEditorPane);
 		summaryScrollPane.setViewportBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Oppsummering etter s\u00F8k", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
