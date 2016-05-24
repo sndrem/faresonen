@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.print.PrinterException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -103,6 +103,7 @@ public class Main {
 		gui.getGetMatchesButton().addActionListener(e);
 		gui.getTopscorerButton().addActionListener(e);
 		gui.getTableButton().addActionListener(e);
+		gui.getPrintItem().addActionListener(e);
 		
 		gui.getLeagueUrls().addItemListener(new ComboBoxEvent());
 		gui.getRoundComboBox().addItemListener(new ComboBoxEvent());
@@ -123,8 +124,7 @@ public class Main {
 				summary += match.toString() + "<br><br>";
 			}
 		}
-		summary += "</table>";
-		gui.getSummaryEditorPane().setText("<p>" + summary + "</p>");
+		gui.getSummaryEditorPane().setText(summary);
 		gui.getSummaryEditorPane().setCaretPosition(0);
 	}
 	
@@ -387,6 +387,19 @@ private class EventHandler implements ActionListener {
 			// Hent tabell
 			} else if(e.getSource() == gui.getTableButton()) {
 				showTable(parser.getTable(leagueUrls.get(gui.getTableDropdown().getSelectedItem())));
+			} else if(e.getSource() == gui.getPrintItem()) {
+				boolean complete = false;
+				try {
+					complete = gui.getSummaryEditorPane().print();
+				} catch (PrinterException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				if(complete) {
+					gui.showMessage("Printing is done");
+				} else {
+					gui.showMessage("Printing...");
+				}
 			}
 		}
 

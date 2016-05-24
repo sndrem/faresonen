@@ -13,6 +13,9 @@ import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -49,6 +52,7 @@ public class Gui {
 	private JComboBox<String> tableDropdown;
 	private JPanel getNextMatchesPanel;
 	private JComboBox<Integer> roundComboBox;
+	private JMenuItem printItem;
 
 	
 	public Gui() {
@@ -136,7 +140,7 @@ public class Gui {
 		dangerZoneScrollPane.setViewportBorder(new TitledBorder(null, "Spillere i faresonen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		summaryEditorPane = new JEditorPane("text/html", "");
-		Font font = new Font("Arial", Font.PLAIN, 12);
+		Font font = new Font("Arial", Font.PLAIN, 10);
 		String bodyRule = "body {font-family: " + font.getFamily() + "; " +
 				"font-size: " + font.getSize() + "pt; }";
 		((HTMLDocument) summaryEditorPane.getDocument()).getStyleSheet().addRule(bodyRule);
@@ -172,8 +176,25 @@ public class Gui {
 		
 		frame.getRootPane().setDefaultButton(searchPlayerButton);
 		
+		createMenuBar();
+		
 		frame.setVisible(true);
 	
+	}
+	
+	/**
+	 * Method to create the menubar
+	 */
+	private void createMenuBar() {
+		JMenuBar menuBar = new JMenuBar();
+		
+		JMenu menu = new JMenu("File");
+		menuBar.add(menu);
+		
+		setPrintItem(new JMenuItem("Print"));
+		menu.add(getPrintItem());
+		
+		frame.setJMenuBar(menuBar);
 	}
 	
 	/**
@@ -465,6 +486,20 @@ public class Gui {
 	 */
 	public void setRoundComboBox(JComboBox<Integer> roundComboBox) {
 		this.roundComboBox = roundComboBox;
+	}
+
+	/**
+	 * @return the printItem
+	 */
+	public JMenuItem getPrintItem() {
+		return printItem;
+	}
+
+	/**
+	 * @param printItem the printItem to set
+	 */
+	public void setPrintItem(JMenuItem printItem) {
+		this.printItem = printItem;
 	}
 
 }
