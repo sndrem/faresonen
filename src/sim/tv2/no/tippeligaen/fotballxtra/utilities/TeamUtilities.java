@@ -36,7 +36,7 @@ public class TeamUtilities {
 		} else if(teamName.equalsIgnoreCase("Start")) {
 			return "STA";
 		} else {
-			return null;
+			return teamName;
 		}
 	}
 

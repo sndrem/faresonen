@@ -45,8 +45,8 @@ public class DangerZoneParser {
 	 * @throws IndexOutOfBoundsException
 	 */
 	public List<Match> getNextMatches(String url) throws IndexOutOfBoundsException , IOException{
-		Set<Player> homeScorers = null;
-		Set<Player> awayScorers = null;
+		List<Player> homeScorers = null;
+		List<Player> awayScorers = null;
 		try {
 			Document doc = Jsoup.connect(url).get();
 			Elements matches = doc.getElementsByTag("tr");
@@ -65,8 +65,8 @@ public class DangerZoneParser {
 	
 				// TODO Finn målscorere
 				Elements events = matchPage.select("#sd_match_stats tr");
-				homeScorers = new HashSet<Player>();
-				awayScorers = new HashSet<Player>();
+				homeScorers = new ArrayList<Player>();
+				awayScorers = new ArrayList<Player>();
 				for(Element event : events) {
 					Element homeTeamEvent = event.children().first();
 					Element timeCode = event.children().get(1);
@@ -75,41 +75,15 @@ public class DangerZoneParser {
 					extractGoalScorers(awayScorers, awayTeamEvent, timeCode);
 				}
 				
-						
+				String arena = extractArena(matchPage);
+				String date = extractMatchDate(matchPage);
+				String referee = extractReferee(matchPage);
 
-				Elements arenas = matchPage.select(".sd_game_small").select(".sd_game_home");
-				Elements roundAndDate = matchPage.select(".sd_game_small").select(".sd_game_away");
-				// Get the date for the game
-				String[] dateArray = roundAndDate.text().split(" ");	
-				String date = dateArray[dateArray.length - 3];
-				Element matchDetails = matchPage.getElementById("sd_match_details");
-				Elements refs = matchDetails.select("#sd_match_details > table > tbody > tr > td:nth-child(2) > p");
-
-				Pattern regexPattern = Pattern.compile("(.{1}).*?Assistentdommere:");
-				Matcher regexMatcher = regexPattern.matcher(refs.text());
-
-				// Hent ut dommeren
-				String referee = "";
-				while(regexMatcher.find()) {
-					if(regexMatcher.group().length() != 0) {
-						referee = regexMatcher.group().replaceAll(" Assistentdommere:", "");
-					}
-				}
-
-				String[] arenaText = null;
-				for(Element arena : arenas) {
-					arenaText = arena.text().split(" ");
-				}
 
 				Match matchToList = new Match(date, homeTeam, awayTeam, tournament, time.split(" ")[0], channels, round);
 				matchToList.setHomeScorers(homeScorers);
 				matchToList.setAwayScorers(awayScorers);
-				String arena = "";
-				for(String s : arenaText) {
-					if(!s.equals("Kampen")) {
-						arena += s + " ";
-					} else break;
-				}
+				
 				matchToList.setArena(arena);
 				matchToList.setReferee(referee);
 				getMatchList().add(matchToList);
@@ -124,21 +98,68 @@ public class DangerZoneParser {
 		return matchList;
 	}
 
-	private void extractGoalScorers(Set<Player> homeScorers, Element homeTeamEvent,
+	private String extractReferee(Document matchPage) {
+		Element matchDetails = matchPage.getElementById("sd_match_details");
+		Elements refs = matchDetails.select("#sd_match_details > table > tbody > tr > td:nth-child(2) > p");
+
+		Pattern regexPattern = Pattern.compile("(.{1}).*?Assistentdommere:");
+		Matcher regexMatcher = regexPattern.matcher(refs.text());
+
+		// Hent ut dommeren
+		String referee = "";
+		while(regexMatcher.find()) {
+			if(regexMatcher.group().length() != 0) {
+				referee = regexMatcher.group().replaceAll(" Assistentdommere:", "");
+			}
+		}
+		return referee;
+	}
+
+	private String extractMatchDate(Document matchPage) {
+		Elements roundAndDate = matchPage.select(".sd_game_small").select(".sd_game_away");
+		// Get the date for the game
+		String[] dateArray = roundAndDate.text().split(" ");	
+		String date = dateArray[dateArray.length - 3];
+		return date;
+	}
+	
+	private String extractArena(Document matchPage) {
+		Elements elements = matchPage.select(".sd_game_small").select(".sd_game_home");
+		String[] arenaText = null;
+		for(Element arena : elements) {
+			arenaText = arena.text().split(" ");
+		}
+		
+		String arena = "";
+		for(String s : arenaText) {
+			if(!s.equals("Kampen")) {
+				arena += s + " ";
+			} else break;
+		}
+		return arena;
+	}
+
+	/**
+	 * Method to get the goal scorers for a given game
+	 * @param homeScorers
+	 * @param homeTeamEvent
+	 * @param timeCode
+	 */
+	private void extractGoalScorers(List<Player> scorers, Element event,
 			Element timeCode) {
-		if(!homeTeamEvent.text().equalsIgnoreCase(Main.NBSP)) {
-			if(homeTeamEvent.childNodeSize() > 0) {
-				if(isGoalScorerElement(homeTeamEvent.child(0).attr("style"))) {
-					String name = homeTeamEvent.text().replace(Main.NBSP, " ");
-					Player homePlayer = new Player("", name.trim(), "", 0, 0, "");
+		if(!event.text().equalsIgnoreCase(Main.NBSP)) {
+			if(event.childNodeSize() > 0) {
+				if(isGoalScorerElement(event.child(0).attr("style"))) {
+					String name = event.text().replace(Main.NBSP, " ");
+					Player player = new Player("", name.trim(), "", 0, 0, "");
 					int eventTime = 0;
 					try {
 						eventTime = Integer.parseInt(timeCode.text());
 					} catch(NumberFormatException e) {
 						
 					}
-					homePlayer.getEventList().add(new Event(homePlayer.getName(), eventTime));
-					homeScorers.add(homePlayer);
+					player.getEventList().add(new Event(player.getName(), eventTime));
+					scorers.add(player);
 				}
 			}
 		}

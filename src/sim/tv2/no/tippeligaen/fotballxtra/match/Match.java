@@ -1,7 +1,7 @@
 package sim.tv2.no.tippeligaen.fotballxtra.match;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
 import sim.tv2.no.tippeligaen.fotballxtra.utilities.TeamUtilities;
@@ -11,7 +11,7 @@ public class Match implements Comparable<Match> {
 
 	private String matchDate, homeTeam, awayTeam, tournament, time, channels, referee, arena, matchUrl, round;
 	private boolean isPlayed = false;
-	private Set<Player> homeScorers, awayScorers;
+	private List<Player> homeScorers, awayScorers;
 	
 	
 	// TODO Lagre url for kampene slik at vi kan direkte til de
@@ -39,8 +39,8 @@ public class Match implements Comparable<Match> {
 		if(this.time.contains("-")) {
 			this.setPlayed(true);
 		}
-		this.setHomeScorers(new HashSet<Player>());
-		this.setAwayScorers(new HashSet<Player>());
+		this.setHomeScorers(new ArrayList<Player>());
+		this.setAwayScorers(new ArrayList<Player>());
 	}
 
 
@@ -158,14 +158,14 @@ public class Match implements Comparable<Match> {
 				+ "<p style=\"text-align:left;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(homeTeam) + ": </span>"
 				+ "<span style=\"font-weight: normal;\">";
 				
-				for(Player player : homeScorers) {
+				for(Player player : getHomeScorers()) {
 					info += player.getGoalString() + " ";
 				}
 			info += "</span></p>"
 				+ "<p style=\"text-align:left; border-bottom: 1px solid black;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(awayTeam) + ": </span>"
 				+ "<span style=\"font-weight: normal;\">";
-				for(Player player : awayScorers) {
-					if(awayScorers.size() > 1) {
+				for(Player player : getAwayScorers()) {
+					if(getAwayScorers().size() > 1) {
 						info += player.getGoalString() + ", ";
 					} else {
 						info += player.getGoalString() + " ";
@@ -279,7 +279,7 @@ public class Match implements Comparable<Match> {
 	/**
 	 * @return the homeScorers
 	 */
-	public Set<Player> getHomeScorers() {
+	public List<Player> getHomeScorers() {
 		return homeScorers;
 	}
 
@@ -287,7 +287,7 @@ public class Match implements Comparable<Match> {
 	/**
 	 * @param homeScorers the homeScorers to set
 	 */
-	public void setHomeScorers(Set<Player> homeScorers) {
+	public void setHomeScorers(List<Player> homeScorers) {
 		this.homeScorers = homeScorers;
 	}
 
@@ -295,7 +295,7 @@ public class Match implements Comparable<Match> {
 	/**
 	 * @return the awayScorers
 	 */
-	public Set<Player> getAwayScorers() {
+	public List<Player> getAwayScorers() {
 		return awayScorers;
 	}
 
@@ -303,7 +303,8 @@ public class Match implements Comparable<Match> {
 	/**
 	 * @param awayScorers the awayScorers to set
 	 */
-	public void setAwayScorers(Set<Player> awayScorers) {
+	public void setAwayScorers(List<Player> awayScorers) {
 		this.awayScorers = awayScorers;
 	}
+
 }
