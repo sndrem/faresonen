@@ -37,6 +37,7 @@ public class Main {
 	private Map<String, String> topscorerUrls;
 	private final String TIPPELIGAEN = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=1&seasonId=&teamId=";
 	private final String OBOSLIGAEN = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=2&seasonId=&teamId=";
+	public static final String NBSP = "\u00A0";
 	
 	public static void main(String[] args) {
 		Runnable r = new Runnable() {

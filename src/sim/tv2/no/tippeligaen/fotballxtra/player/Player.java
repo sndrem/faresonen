@@ -3,14 +3,14 @@ package sim.tv2.no.tippeligaen.fotballxtra.player;
 import java.util.ArrayList;
 import java.util.List;
 
-import sim.tv2.no.tippeligaen.fotballxtra.goal.Goal;
+import sim.tv2.no.tippeligaen.fotballxtra.goal.Event;
 
 public class Player implements Comparable<String> {
 	
 	private int yellowCards, matches;
 	private String name, team, number;
 	private String average;
-	private List<Goal> goalList;
+	private List<Event> eventList;
 	
 	public Player(String number, String name, String team, int yellowCards, int matches, String average) {
 		this.number = number;
@@ -19,7 +19,7 @@ public class Player implements Comparable<String> {
 		this.yellowCards = yellowCards;
 		this.matches = matches;
 		this.average = average;
-		this.goalList = new ArrayList<Goal>();
+		this.setEventList(new ArrayList<Event>());
 	}
 
 	
@@ -29,8 +29,8 @@ public class Player implements Comparable<String> {
 	
 	public String getGoalString() {
 		String info = "";
-		for(Goal goal : goalList) {
-			info += goal.getGoalScorer().getName() + " (" + goal.getTime() + ") ";
+		for(Event event : getEventList()) {
+			info += event.getName() + " (" + event.getTime() + ") ";
 		}
 		return info;
 	}
@@ -126,17 +126,17 @@ public class Player implements Comparable<String> {
 
 
 	/**
-	 * @return the goalList
+	 * @return the eventList
 	 */
-	public List<Goal> getGoalList() {
-		return goalList;
+	public List<Event> getEventList() {
+		return eventList;
 	}
 
 
 	/**
-	 * @param goalList the goalList to set
+	 * @param eventList the eventList to set
 	 */
-	public void setGoalList(List<Goal> goalList) {
-		this.goalList = goalList;
+	public void setEventList(List<Event> eventList) {
+		this.eventList = eventList;
 	}
 }

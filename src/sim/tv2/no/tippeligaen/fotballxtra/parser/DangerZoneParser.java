@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +16,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import sim.tv2.no.tippeligaen.fotballxtra.goal.Goal;
+import sim.tv2.no.tippeligaen.fotballxtra.goal.Event;
+import sim.tv2.no.tippeligaen.fotballxtra.main.Main;
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Topscorer;
@@ -46,8 +48,8 @@ public class DangerZoneParser {
 	 * @throws IndexOutOfBoundsException
 	 */
 	public List<Match> getNextMatches(String url) throws IndexOutOfBoundsException , IOException{
-		List<Player> homeScorers = null;
-		List<Player> awayScorers = null;
+		Set<Player> homeScorers = null;
+		Set<Player> awayScorers = null;
 		try {
 			Document doc = Jsoup.connect(url).get();
 			Elements matches = doc.getElementsByTag("tr");
@@ -63,63 +65,21 @@ public class DangerZoneParser {
 				String matchUrl = "http://altomfotball.no/" + match.getElementsByClass("sd_fixtures_score").tagName("a").attr("href");
 				Document matchPage = Jsoup.connect(matchUrl).get();
 
-				//				System.out.println(matchPage);
-
+	
 				// TODO Finn målscorere
 				Elements events = matchPage.select("#sd_match_stats tr");
-				Element homeTeamScorer = null, awayTeamScorer = null;
-				int goalTime = 0;
-				for(Element eventRow : events) {
-					Element homeTeamEvent = eventRow.children().first();
-					Element awayTeamEvent = eventRow.children().last();
-					Element eventTime = eventRow.children().get(1);
-					
-					try {
-						goalTime = Integer.parseInt(eventTime.text());
-					} catch(NumberFormatException e) {
-
-					}
-
-
-					try {
-						String attrText = homeTeamEvent.child(0).attr("style");
-						if(isGoalScorerElement(attrText)) {
-							homeTeamScorer = homeTeamEvent;
-						}
-					} catch(IndexOutOfBoundsException e) {
-						
-					}
-					
-					try {
-						String attrText = awayTeamEvent.child(0).attr("style");
-						if(isGoalScorerElement(attrText)) {
-							awayTeamScorer = awayTeamEvent;
-							}
-						} catch(IndexOutOfBoundsException e) {
-							
-						}
-					
-					homeScorers =  new ArrayList<Player>();
-					awayScorers =  new ArrayList<Player>();
-					
-					if(homeTeamScorer != null) {
-						Player homePlayer = new Player("", homeTeamScorer.text().trim(), "", 0, 0, "");
-						homePlayer.getGoalList().add(new Goal(homePlayer, goalTime));
-						System.out.println("Hjemmelag: " + homePlayer.getGoalString());
-						homeScorers.add(homePlayer);
-					}
-					
-					if(awayTeamScorer != null) {
-						Player awayPlayer = new Player("", awayTeamScorer.text(), "", 0, 0, "");
-						awayPlayer.getGoalList().add(new Goal(awayPlayer, goalTime));
-						System.out.println("Bortelag: " + awayPlayer.getGoalString());
-						awayScorers.add(awayPlayer);
-					}
+				homeScorers = new HashSet<Player>();
+				awayScorers = new HashSet<Player>();
+				for(Element event : events) {
+					Element homeTeamEvent = event.children().first();
+					Element timeCode = event.children().get(1);
+					Element awayTeamEvent = event.children().last();
+					extractGoalScorers(homeScorers, homeTeamEvent, timeCode);
+					extractGoalScorers(awayScorers, awayTeamEvent, timeCode);
 				}
 				
 						
 
-				// TODO Hent bare ut dommeren
 				Elements arenas = matchPage.select(".sd_game_small").select(".sd_game_home");
 				Elements roundAndDate = matchPage.select(".sd_game_small").select(".sd_game_away");
 				// Get the date for the game
@@ -131,6 +91,7 @@ public class DangerZoneParser {
 				Pattern regexPattern = Pattern.compile("(.{1}).*?Assistentdommere:");
 				Matcher regexMatcher = regexPattern.matcher(refs.text());
 
+				// TODO Hent bare ut dommeren
 				String referee = "";
 				while(regexMatcher.find()) {
 					if(regexMatcher.group().length() != 0) {
@@ -157,14 +118,33 @@ public class DangerZoneParser {
 				getMatchList().add(matchToList);
 
 			}
-
-
+	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new IOException("Kunne ikke hente neste kamper for" + url + " Er du koblet til internett?");
 		}
 		return matchList;
+	}
+
+	private void extractGoalScorers(Set<Player> homeScorers, Element homeTeamEvent,
+			Element timeCode) {
+		if(!homeTeamEvent.text().equalsIgnoreCase(Main.NBSP)) {
+			if(homeTeamEvent.childNodeSize() > 0) {
+				if(isGoalScorerElement(homeTeamEvent.child(0).attr("style"))) {
+					System.out.println(homeTeamEvent.text() + " - " + timeCode.text());
+					Player homePlayer = new Player("", homeTeamEvent.text(), "", 0, 0, "");
+					int eventTime = 0;
+					try {
+						eventTime = Integer.parseInt(timeCode.text());
+					} catch(NumberFormatException e) {
+						
+					}
+					homePlayer.getEventList().add(new Event(homePlayer.getName(), eventTime));
+					homeScorers.add(homePlayer);
+				}
+			}
+		}
 	}
 	
 	/**
