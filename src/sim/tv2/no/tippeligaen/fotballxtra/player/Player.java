@@ -30,7 +30,7 @@ public class Player implements Comparable<String> {
 	public String getGoalString() {
 		String info = "";
 		for(Goal goal : goalList) {
-			info += goal.getGoalScorer().getName() + "(" + goal.getTime() + "), ";
+			info += goal.getGoalScorer().getName() + " (" + goal.getTime() + ") ";
 		}
 		return info;
 	}

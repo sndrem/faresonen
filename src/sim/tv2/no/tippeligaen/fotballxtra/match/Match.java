@@ -155,13 +155,24 @@ public class Match implements Comparable<Match> {
 	 */
 	public String getMatchIsPlayedInfo() {
 		String info = "<p style=\"font-weight: bold; text-align:center;\">" + homeTeam + " " + time + " " + awayTeam + "</p>"
-				+ "<p style=\"text-align:left;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(homeTeam) + ": </span><span style=\"font-weight: normal;\">"
-				+ "</span>";
+				+ "<p style=\"text-align:left;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(homeTeam) + ": </span>"
+				+ "<span style=\"font-weight: normal;\">";
+				
 				for(Player player : homeScorers) {
 					info += player.getGoalString() + " ";
 				}
-			info += "</p>"
-				+ "<p style=\"text-align:left; border-bottom: 1px solid black;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(awayTeam) + ": </span><span style=\"font-weight: normal;\"></span></p>";
+			info += "</span></p>"
+				+ "<p style=\"text-align:left; border-bottom: 1px solid black;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(awayTeam) + ": </span>"
+				+ "<span style=\"font-weight: normal;\">";
+				for(Player player : awayScorers) {
+					if(awayScorers.size() > 1) {
+						info += player.getGoalString() + ", ";
+					} else {
+						info += player.getGoalString() + " ";
+					}
+				}
+				
+			info += "</span></p>";
 		
 		return info;
 	}

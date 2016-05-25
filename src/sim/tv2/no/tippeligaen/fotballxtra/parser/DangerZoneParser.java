@@ -46,8 +46,8 @@ public class DangerZoneParser {
 	 * @throws IndexOutOfBoundsException
 	 */
 	public List<Match> getNextMatches(String url) throws IndexOutOfBoundsException , IOException{
-		List<Player> homeScorers = new ArrayList<Player>();
-		List<Player> awayScorers = new ArrayList<Player>();
+		List<Player> homeScorers = null;
+		List<Player> awayScorers = null;
 		try {
 			Document doc = Jsoup.connect(url).get();
 			Elements matches = doc.getElementsByTag("tr");
@@ -85,7 +85,6 @@ public class DangerZoneParser {
 						String attrText = homeTeamEvent.child(0).attr("style");
 						if(isGoalScorerElement(attrText)) {
 							homeTeamScorer = homeTeamEvent;
-							System.out.println("Hjemmelagsscorer: " + homeTeamScorer.text() + " tid: " + goalTime);
 						}
 					} catch(IndexOutOfBoundsException e) {
 						
@@ -95,27 +94,30 @@ public class DangerZoneParser {
 						String attrText = awayTeamEvent.child(0).attr("style");
 						if(isGoalScorerElement(attrText)) {
 							awayTeamScorer = awayTeamEvent;
-							System.out.println("Bortelagsscorer: " + awayTeamScorer.text() + " tid: " + goalTime);
 							}
 						} catch(IndexOutOfBoundsException e) {
 							
 						}
 					
+					homeScorers =  new ArrayList<Player>();
+					awayScorers =  new ArrayList<Player>();
+					
 					if(homeTeamScorer != null) {
-						Player homePlayer = new Player("", homeTeamScorer.text(), "", 0, 0, "");
+						Player homePlayer = new Player("", homeTeamScorer.text().trim(), "", 0, 0, "");
 						homePlayer.getGoalList().add(new Goal(homePlayer, goalTime));
+						System.out.println("Hjemmelag: " + homePlayer.getGoalString());
 						homeScorers.add(homePlayer);
 					}
 					
 					if(awayTeamScorer != null) {
 						Player awayPlayer = new Player("", awayTeamScorer.text(), "", 0, 0, "");
 						awayPlayer.getGoalList().add(new Goal(awayPlayer, goalTime));
+						System.out.println("Bortelag: " + awayPlayer.getGoalString());
 						awayScorers.add(awayPlayer);
 					}
 				}
 				
-				
-				
+						
 
 				// TODO Hent bare ut dommeren
 				Elements arenas = matchPage.select(".sd_game_small").select(".sd_game_home");
