@@ -32,13 +32,10 @@ public class DangerZoneParser {
 
 
 	public DangerZoneParser() {
-		//		dbConn = DatabaseConnection.getInstance();
 		setPlayers(new ArrayList<Player>());
 		setTeamNames(new HashSet<String>());
 		setMatchList(new ArrayList<Match>());
 		setTeams(new HashMap<String, Team>());
-
-
 	}
 
 	/**
@@ -91,7 +88,7 @@ public class DangerZoneParser {
 				Pattern regexPattern = Pattern.compile("(.{1}).*?Assistentdommere:");
 				Matcher regexMatcher = regexPattern.matcher(refs.text());
 
-				// TODO Hent bare ut dommeren
+				// Hent ut dommeren
 				String referee = "";
 				while(regexMatcher.find()) {
 					if(regexMatcher.group().length() != 0) {
@@ -122,7 +119,7 @@ public class DangerZoneParser {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new IOException("Kunne ikke hente neste kamper for" + url + " Er du koblet til internett?");
+			throw new IOException("Kunne ikke hente neste kamper for" + url + ". Er du koblet til internett?");
 		}
 		return matchList;
 	}
@@ -132,8 +129,8 @@ public class DangerZoneParser {
 		if(!homeTeamEvent.text().equalsIgnoreCase(Main.NBSP)) {
 			if(homeTeamEvent.childNodeSize() > 0) {
 				if(isGoalScorerElement(homeTeamEvent.child(0).attr("style"))) {
-					System.out.println(homeTeamEvent.text() + " - " + timeCode.text());
-					Player homePlayer = new Player("", homeTeamEvent.text(), "", 0, 0, "");
+					String name = homeTeamEvent.text().replace(Main.NBSP, " ");
+					Player homePlayer = new Player("", name.trim(), "", 0, 0, "");
 					int eventTime = 0;
 					try {
 						eventTime = Integer.parseInt(timeCode.text());

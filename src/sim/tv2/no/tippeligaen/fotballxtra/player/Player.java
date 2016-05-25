@@ -27,13 +27,26 @@ public class Player implements Comparable<String> {
 		return this.name + ", " + this.yellowCards + " gule";
 	}
 	
+	/**
+	 * Method to return a formatted text-string based upon the number of goals the player has scored
+	 * @param int number of goals scored
+	 * @return
+	 */
 	public String getGoalString() {
 		String info = "";
-		for(Event event : getEventList()) {
-			info += event.getName() + " (" + event.getTime() + ") ";
+		if(getEventList().size() == 1) {
+			return this.name + " (" + this.getEventList().get(0).getTime() + ") ";
+		} else {
+			String goals = "(";
+			for(Event event : getEventList()) {
+				goals += event.getTime() + " ";
+			}
+			goals += "), ";
+			info += this.getName() + " " + goals;
 		}
 		return info;
 	}
+	
 
 	/**
 	 * @return the number
