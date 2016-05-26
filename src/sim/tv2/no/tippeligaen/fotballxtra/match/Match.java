@@ -159,22 +159,25 @@ public class Match implements Comparable<Match> {
 				+ "<span style=\"font-weight: normal;\">";
 				
 				for(Player player : getHomeScorers()) {
-					info += player.getGoalString() + " ";
+					info += getCorrectEndGoalInfoString(getHomeScorers().size(), player);
 				}
 			info += "</span></p>"
 				+ "<p style=\"text-align:left; border-bottom: 1px solid black;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(awayTeam) + ": </span>"
 				+ "<span style=\"font-weight: normal;\">";
 				for(Player player : getAwayScorers()) {
-					if(getAwayScorers().size() > 1) {
-						info += player.getGoalString() + ", ";
-					} else {
-						info += player.getGoalString() + " ";
-					}
+					info += getCorrectEndGoalInfoString(getAwayScorers().size(), player);
 				}
 				
 			info += "</span></p>";
 		
 		return info;
+	}
+	
+	// TODO Finn på et bedre navn for denne metoden
+	public String getCorrectEndGoalInfoString(int size, Player player) {
+		if(size > 1) {
+			return player.getGoalString() + ", ";
+		} else return player.getGoalString() +  " ";
 	}
 	
 	/**

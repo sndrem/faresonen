@@ -54,6 +54,7 @@ public class Gui {
 	private JComboBox<Integer> roundComboBox;
 	private JMenuItem printItem;
 	private JCheckBox formatMatchesChkBox;
+	private JMenuItem infoItem;
 
 	
 	public Gui() {
@@ -195,9 +196,15 @@ public class Gui {
 		JMenu menu = new JMenu("File");
 		menuBar.add(menu);
 		
+		JMenu helpMenu = new JMenu("Help");
+		menuBar.add(helpMenu);
+		
 		setPrintItem(new JMenuItem("Print"));
 		menu.add(getPrintItem());
 		getPrintItem().setEnabled(false);
+		
+		setInfoItem(new JMenuItem("Info"));
+		helpMenu.add(getInfoItem());
 		
 		frame.setJMenuBar(menuBar);
 	}
@@ -206,7 +213,14 @@ public class Gui {
 	 * Method to show a popup dialog
 	 */
 	public void showMessage(String message) {
-		JOptionPane.showMessageDialog(null, message);
+		JOptionPane.showMessageDialog(frame, message);
+	}
+	
+	/**
+	 * Method to show a popup dialig with a title
+	 */
+	public void showMessage(String message, String title) {
+		JOptionPane.showMessageDialog(frame, message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
@@ -519,6 +533,20 @@ public class Gui {
 	 */
 	public void setFormatMatchesChkBox(JCheckBox formatMatchesChkBox) {
 		this.formatMatchesChkBox = formatMatchesChkBox;
+	}
+
+	/**
+	 * @return the infoItem
+	 */
+	public JMenuItem getInfoItem() {
+		return infoItem;
+	}
+
+	/**
+	 * @param infoItem the infoItem to set
+	 */
+	public void setInfoItem(JMenuItem infoItem) {
+		this.infoItem = infoItem;
 	}
 
 }

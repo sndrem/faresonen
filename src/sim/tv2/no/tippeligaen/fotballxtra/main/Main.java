@@ -38,6 +38,9 @@ public class Main {
 	private final String TIPPELIGAEN = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=1&seasonId=&teamId=";
 	private final String OBOSLIGAEN = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=2&seasonId=&teamId=";
 	public static final String NBSP = "\u00A0";
+	private static final String VERSION = "1.0";
+	private static final String AUTHOR = "Sindre Moldeklev";
+	private static final String EMAIL = "sndrem@gmail.com";
 	
 	public static void main(String[] args) {
 		Runnable r = new Runnable() {
@@ -105,6 +108,7 @@ public class Main {
 		gui.getTopscorerButton().addActionListener(e);
 		gui.getTableButton().addActionListener(e);
 		gui.getPrintItem().addActionListener(e);
+		gui.getInfoItem().addActionListener(e);
 		
 		gui.getLeagueUrls().addItemListener(new ComboBoxEvent());
 		gui.getRoundComboBox().addItemListener(new ComboBoxEvent());
@@ -425,6 +429,9 @@ private class EventHandler implements ActionListener {
 				} else {
 					gui.showMessage("Printing...");
 				}
+			} else if(e.getSource() == gui.getInfoItem()) {
+				String message = "Version: " + Main.VERSION + "\nUtviklet av: " + Main.AUTHOR + "\nSpørsmål? " + Main.EMAIL;
+				gui.showMessage(message, "Info om programmet");
 			}
 		}
 

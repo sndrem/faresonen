@@ -34,8 +34,12 @@ public class Player implements Comparable<String> {
 	 */
 	public String getGoalString() {
 		String info = "";
+		if(getEventList().size() < 1){
+			return "";
+		}
+		
 		if(getEventList().size() == 1) {
-			return this.name + " (" + this.getEventList().get(0).getTime() + ") ";
+			return getLastName() + " (" + this.getEventList().get(0).getTime() + ") ";
 		} else {
 			String goals = "(";
 			for(Event event : getEventList()) {
@@ -45,6 +49,17 @@ public class Player implements Comparable<String> {
 			info += this.getName() + " " + goals;
 		}
 		return info;
+	}
+	
+	private String getLastName() {
+		String[] nameArray = this.name.split(" ");
+		String name = "";
+		if(nameArray.length >= 1) {
+			for (int i = 1; i < nameArray.length; i++) {
+				name += nameArray[i] + " ";
+			}
+		}
+		return name;
 	}
 	
 
