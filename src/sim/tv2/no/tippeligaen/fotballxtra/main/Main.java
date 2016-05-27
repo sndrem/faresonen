@@ -5,6 +5,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.print.PrinterException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +44,7 @@ public class Main {
 	private static final String VERSION = "1.0";
 	private static final String AUTHOR = "Sindre Moldeklev";
 	private static final String EMAIL = "sndrem@gmail.com";
+	private static Map<String, String> teamNames;
 	
 	public static void main(String[] args) {
 		Runnable r = new Runnable() {
@@ -62,6 +66,13 @@ public class Main {
 		gui = Gui.getInstance();
 		leagueUrls = new HashMap<String, String>();
 		topscorerUrls = new HashMap<String, String>();
+		setTeamNames(new HashMap<String, String>());
+		try {
+			readTeamNames(new File("lagnavn.txt"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setupLeagueUrls();
 		updateRoundSelector((String) gui.getLeagueUrls().getSelectedItem());
 		setupActionListeners();
@@ -112,7 +123,45 @@ public class Main {
 		
 		gui.getLeagueUrls().addItemListener(new ComboBoxEvent());
 		gui.getRoundComboBox().addItemListener(new ComboBoxEvent());
-}
+	}
+	
+	/**
+	 * Method for reading team names and abbreviations into memory from textfile
+	 * @param File file to read
+	 */
+	private void readTeamNames(File file) throws IOException {
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			String line = "";
+			while((line = reader.readLine()) != null) {
+				String[] teams = line.split("-");
+				getTeamNames().put(teams[1].trim(), teams[0].trim());
+			
+			}
+
+		} catch(IOException e) {
+			throw e;
+		} finally {
+			try {
+				reader.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * Method to get the abbreviation of a teams name
+	 * @param String teamName name of the team
+	 * @return String the abbreviation if one is found, otherwise just return the teamname
+	 */
+	public static String getAbbreviation(String teamName) {
+		String abbreviation = Main.teamNames.get(teamName);
+		if(abbreviation != null) {
+			return abbreviation;
+		} else return teamName;
+	}
 
 	/**
 	 * Metode for å vise kampene som brukeren ber om
@@ -288,6 +337,24 @@ public class Main {
 	
 	
 	
+
+	/**
+	 * @return the teamNames
+	 */
+	public Map<String, String> getTeamNames() {
+		return teamNames;
+	}
+
+
+	/**
+	 * @param teamNames the teamNames to set
+	 */
+	public void setTeamNames(Map<String, String> teamNames) {
+		this.teamNames = teamNames;
+	}
+
+
+
 
 	/**
 	 * Private class to deal with the event handling

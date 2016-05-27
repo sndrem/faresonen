@@ -1,0 +1,33 @@
+AaFK - Aalesund
+B/G - Bodø/Glimt
+FKH - Haugesund
+LSK - Lillestrøm
+MJØ - Mjøndalen
+MOL - Molde
+ODD - Odd
+RBK - Rosenborg
+SAN - Sandefjord
+S08 - Sarpsborg 08
+STB - Stabæk
+STA - Start
+SIF - Strømsgodset
+TIL - Tromsø
+VIK - Viking
+VIF - Vålerenga
+BRA - Brann
+BRY - Bryne
+BÆR - Bærum
+FOL - Follo
+FFK - Fredrikstad
+HØD - Hødd
+HBK - Hønefoss
+JER - Jerv
+KRI - Kristiansund
+LEV - Levanger
+NSO - Nest-Sotra
+RAN - Ranheim
+ULF - Sandnes Ulf
+SOG - Sogndal
+STR - Strømmen
+ÅSA - Åsane
+U/K - Ullensaker/Kisa

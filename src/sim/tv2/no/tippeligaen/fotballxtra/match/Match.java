@@ -3,8 +3,8 @@ package sim.tv2.no.tippeligaen.fotballxtra.match;
 import java.util.ArrayList;
 import java.util.List;
 
+import sim.tv2.no.tippeligaen.fotballxtra.main.Main;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
-import sim.tv2.no.tippeligaen.fotballxtra.utilities.TeamUtilities;
 
 
 public class Match implements Comparable<Match> {
@@ -155,14 +155,14 @@ public class Match implements Comparable<Match> {
 	 */
 	public String getMatchIsPlayedInfo() {
 		String info = "<p style=\"font-weight: bold; text-align:center;\">" + homeTeam + " " + time + " " + awayTeam + "</p>"
-				+ "<p style=\"text-align:left;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(homeTeam) + ": </span>"
+				+ "<p style=\"text-align:left;\"><span style=\"font-weight:bold;\">" + Main.getAbbreviation(homeTeam) + ": </span>"
 				+ "<span style=\"font-weight: normal;\">";
 				
 				for(Player player : getHomeScorers()) {
 					info += getCorrectEndGoalInfoString(getHomeScorers().size(), player);
 				}
 			info += "</span></p>"
-				+ "<p style=\"text-align:left; border-bottom: 1px solid black;\"><span style=\"font-weight:bold;\">" + TeamUtilities.convertTeamToAbbreviation(awayTeam) + ": </span>"
+				+ "<p style=\"text-align:left; border-bottom: 1px solid black;\"><span style=\"font-weight:bold;\">" + Main.getAbbreviation(awayTeam) + ": </span>"
 				+ "<span style=\"font-weight: normal;\">";
 				for(Player player : getAwayScorers()) {
 					info += getCorrectEndGoalInfoString(getAwayScorers().size(), player);

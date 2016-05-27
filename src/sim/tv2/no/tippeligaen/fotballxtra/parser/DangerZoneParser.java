@@ -54,8 +54,8 @@ public class DangerZoneParser {
 			for(Element match : matches) {
 				String round = match.getElementsByClass("sd_fixtures_round").text();
 				String tournament = match.getElementsByClass("sd_fixtures_tournament").text();
-				String homeTeam = match.getElementsByClass("sd_fixtures_home").text();
-				String awayTeam = match.getElementsByClass("sd_fixtures_away").text();
+				String homeTeam = match.getElementsByClass("sd_fixtures_home").text().replace(Main.NBSP, " ");
+				String awayTeam = match.getElementsByClass("sd_fixtures_away").text().replace(Main.NBSP, " ");
 				String time = match.getElementsByClass("sd_fixtures_score").text();
 				String channels = match.getElementsByClass("sd_fixtures_channels").text();
 
