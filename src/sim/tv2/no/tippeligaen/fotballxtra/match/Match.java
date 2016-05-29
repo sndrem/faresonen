@@ -223,6 +223,7 @@ public class Match implements Comparable<Match> {
 	 */
 	public String getNextRoundMatchInfo() {
 		return  "<td>" + this.matchDate + "</td>"
+				+ "<td>" + this.time + "</td>"
 				+ "<td>" + this.round + "<td>"
 				+ "<td></td>"
 				+ "<td>" + toString() + "</td>"
@@ -230,7 +231,7 @@ public class Match implements Comparable<Match> {
 	}
 		
 	public String toString() {
-		return this.homeTeam + " " + this.time + " " + this.awayTeam;
+		return this.homeTeam + " vs " + this.awayTeam;
 	}
 
 	/**
