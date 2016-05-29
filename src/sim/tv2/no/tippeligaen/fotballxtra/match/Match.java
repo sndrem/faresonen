@@ -1,6 +1,7 @@
 package sim.tv2.no.tippeligaen.fotballxtra.match;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import sim.tv2.no.tippeligaen.fotballxtra.main.Main;
@@ -180,6 +181,19 @@ public class Match implements Comparable<Match> {
 		} else return player.getGoalString() +  " ";
 	}
 	
+	private String formatReferee() {
+		if(this.referee != null) {
+			String[] ref = this.referee.split(" ");
+			String html = "<b>" + ref[0] + " </b>"
+					+ "<span style=\"font-weight:normal\">";
+			for(int i = 1; i < ref.length; i++) {
+				html += ref[i] + " ";
+			}
+			html += "</span>";
+			return html;
+		} else return null;
+	}
+	
 	/**
 	 * Returns match info if the match has not been played before
 	 * @return a formatted text string of the match has not been played
@@ -193,21 +207,13 @@ public class Match implements Comparable<Match> {
 			hasBeenPlayedOnTv += "<span style=\"text-align:center;\">" + this.channels + "</span>";
 		}
 		
-//			if(this.referee != "") {
-//				String[] boldText = this.referee.split(":");
-//				info += "<br><b>" + boldText[0] + ":</b>";
-//				for (int i = 1; i < boldText.length; i++) {
-//					info += boldText[i] + " ";
-//				}
-//			}
-		
 		info = 	"Avspark kl. " + this.time + " " + hasBeenPlayedOnTv + "<br>"
 				+ "<b style=\"font-size:11px;\">" + homeTeam + " - " + awayTeam + ", " + this.arena + "</b><br>"
 				+ "<p style=\"text-align:right; border-bottom: 1px solid black;\"<b>Reporter: </b><br>"
 				+ "<b>Kommentator(er): </b><br>"
 				+ "<b>Arenaekspert: </b><br>"
 				+ "<b>Studioekspert: </b><br>"
-				+ "<b>Dommer: <span style=\"font-weight:normal;\">" + this.referee + "</span></p>";			
+				+ formatReferee() + "</p>";
 		return info;
 	}
 	
