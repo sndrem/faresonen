@@ -2,10 +2,12 @@ package sim.tv2.no.tippeligaen.fotballxtra.weather;
 
 public class Weather {
 	
-	private String fromTime, toTime, windExplanation, symbolName;
+	private String fromTime, toTime, windExplanation, symbolName, location;
 	private Double degrees, wind;
 
-	public Weather(String fromTime, String toTime, Double degrees, Double wind, String windExplanation, int symbolNumber, String symbolName) {
+		
+	public Weather(String location, String fromTime, String toTime, Double degrees, Double wind, String windExplanation, int symbolNumber, String symbolName) {
+		setLocation(location);
 		this.fromTime = fromTime;
 		this.toTime = toTime;
 		this.setDegrees(degrees);
@@ -15,7 +17,7 @@ public class Weather {
 	}
 	
 	public String toString() {
-		String info = "Værvarsel fra " + this.fromTime + " til " + this.toTime + "\n"
+		String info = "Værvarsel for " + this.location + "\nFra " + this.fromTime + " til " + this.toTime + "\n"
 				+ "Det er meldt " + this.degrees + " celcius og det skal blåse " + this.wind + " mps. Det tilsvarer " + this.windExplanation;
 		return info;
 	}
@@ -102,5 +104,19 @@ public class Weather {
 	 */
 	public void setSymbolName(String symbolName) {
 		this.symbolName = symbolName;
+	}
+
+	/**
+	 * @return the location
+	 */
+	public String getLocation() {
+		return location;
+	}
+
+	/**
+	 * @param location the location to set
+	 */
+	public void setLocation(String location) {
+		this.location = location;
 	}
 }

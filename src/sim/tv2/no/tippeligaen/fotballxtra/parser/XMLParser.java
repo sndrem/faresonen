@@ -51,7 +51,7 @@ public class XMLParser {
 				int symbolNumber = Integer.parseInt(elem.getChild("symbol").getAttributeValue("number"));
 				String symbolText = elem.getChild("symbol").getAttributeValue("name");
 				try {
-					weatherList.add(new Weather(dateFormat.parse(fromTime).toString(), dateFormat.parse(toTime).toString(), degrees, windSpeed, windExplanation, symbolNumber, symbolText));
+					weatherList.add(new Weather(location, dateFormat.parse(fromTime).toString(), dateFormat.parse(toTime).toString(), degrees, windSpeed, windExplanation, symbolNumber, symbolText));
  				} catch(ParseException e) {
  					e.printStackTrace();
  				}

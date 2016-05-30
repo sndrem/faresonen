@@ -59,7 +59,8 @@ public class Main {
 		SwingUtilities.invokeLater(r);
 		
 		XMLParser parser = new XMLParser();
-		for(Weather weather : parser.parseUrl("http://www.yr.no/sted/Norge/Hordaland/Bergen/Bergen/varsel.xml")) {
+		String url = "http://www.yr.no/sted/Norge/Oslo/Oslo/Ullevål_stadion/varsel.xml";
+		for(Weather weather : parser.parseUrl(url)) {
 			System.out.println(weather);
 			System.out.println();
 		}
