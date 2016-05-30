@@ -23,8 +23,10 @@ import org.jsoup.nodes.Element;
 import sim.tv2.no.tippeligaen.fotballxtra.gui.Gui;
 import sim.tv2.no.tippeligaen.fotballxtra.match.Match;
 import sim.tv2.no.tippeligaen.fotballxtra.parser.DangerZoneParser;
+import sim.tv2.no.tippeligaen.fotballxtra.parser.XMLParser;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Topscorer;
+import sim.tv2.no.tippeligaen.fotballxtra.weather.Weather;
 
 /**
  * Dette er hovedklassen for faresone-programmet.
@@ -55,6 +57,12 @@ public class Main {
 			}
 		};
 		SwingUtilities.invokeLater(r);
+		
+		XMLParser parser = new XMLParser();
+		for(Weather weather : parser.parseUrl("http://www.yr.no/sted/Norge/Hordaland/Bergen/Bergen/varsel.xml")) {
+			System.out.println(weather);
+			System.out.println();
+		}
 	}
 
 	
