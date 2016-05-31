@@ -59,12 +59,6 @@ public class Main {
 			}
 		};
 		SwingUtilities.invokeLater(r);
-		
-//		XMLParser parser = new XMLParser();
-//		String url = "http://www.yr.no/sted/Norge/Oslo/Oslo/Ullevål_stadion/varsel.xml";
-//		Weather weather = parser.parseUrl(url);
-//		System.out.println(weather);
-//		System.out.println();
 	}
 
 	

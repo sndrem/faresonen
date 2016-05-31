@@ -51,15 +51,8 @@ public class Player implements Comparable<String> {
 		return info;
 	}
 	
-	private String getLastName() {
-		String[] nameArray = this.name.split(" ");
-		String name = "";
-		if(nameArray.length >= 1) {
-			for (int i = 1; i < nameArray.length; i++) {
-				name += nameArray[i] + " ";
-			}
-		}
-		return name;
+	public String getLastName() {
+		return this.name.substring(this.name.indexOf(" "));
 	}
 	
 
