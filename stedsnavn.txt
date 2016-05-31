@@ -1,1 +1,16 @@
-Brann - http://www.yr.no/sted/Norge/Hordaland/Bergen/Bergen/varsel.xml
+http://www.yr.no/sted/Norge/Hordaland/Bergen/Bergen/varsel.xml	Brann
+http://www.yr.no/sted/Norge/Oslo/Oslo/Ullevål_stadion/varsel.xml	Vålerenga
+http://www.yr.no/sted/Norge/Sør-Trøndelag/Trondheim/Lerkendal~211228/varsel.xml	Rosenborg
+http://www.yr.no/sted/Norge/Telemark/Skien/Skien/varsel.xml	Odd
+http://www.yr.no/sted/Norge/Møre_og_Romsdal/Molde/Aker_Stadion/varsel.xml	Molde
+http://www.yr.no/sted/Norge/Buskerud/Drammen/Marienlyst/varsel.xml	Strømsgodset
+http://www.yr.no/sted/Norge/Rogaland/Stavanger/Viking_stadion/varsel.xml	Viking
+http://www.yr.no/sted/Norge/Rogaland/Haugesund/Haugesund_stadion/varsel.xml	Haugesund
+http://www.yr.no/sted/Norge/Østfold/Sarpsborg/Sarpsborg/varsel.xml	Sarpsborg 08
+http://www.yr.no/sted/Norge/Akershus/Skedsmo/Åråsen~2251558/varsel.xml	Lillestrøm
+http://www.yr.no/sted/Norge/Sogn_og_Fjordane/Sogndal/Sogndal/varsel.xml	Sogndal
+http://www.yr.no/sted/Norge/Troms/Tromsø/Alfheim_stadion/varsel.xml	Tromsø
+http://www.yr.no/place/Norway/Møre_og_Romsdal/Ålesund/Ålesund/varsel.xml	Aalesund
+http://www.yr.no/sted/Norge/Nordland/Bodø/Aspmyra_stadion/varsel.xml	Bodø/Glimt
+http://www.yr.no/sted/Norge/Vest-Agder/Kristiansand/Kristiansand/varsel.xml	Start
+http://www.yr.no/place/Norway/Akershus/Bærum/Nadderud/varsel.xml	Stabæk

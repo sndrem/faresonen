@@ -38,15 +38,17 @@ import sim.tv2.no.tippeligaen.fotballxtra.weather.Weather;
 public class Main {
 	private Gui gui;
 	private DangerZoneParser parser;
+	private XMLParser weatherParser;
 	private Map<String, String> leagueUrls;
 	private Map<String, String> topscorerUrls;
+	private Map<String, String> weatherUrls;
+	private static Map<String, String> teamNames;
 	private final String TIPPELIGAEN = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=1&seasonId=&teamId=";
 	private final String OBOSLIGAEN = "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=yellowCards&tournamentId=2&seasonId=&teamId=";
 	public static final String NBSP = "\u00A0";
 	private static final String VERSION = "1.0";
 	private static final String AUTHOR = "Sindre Moldeklev";
 	private static final String EMAIL = "sndrem@gmail.com";
-	private static Map<String, String> teamNames;
 	
 	public static void main(String[] args) {
 		Runnable r = new Runnable() {
@@ -58,12 +60,11 @@ public class Main {
 		};
 		SwingUtilities.invokeLater(r);
 		
-		XMLParser parser = new XMLParser();
-		String url = "http://www.yr.no/sted/Norge/Oslo/Oslo/Ullevål_stadion/varsel.xml";
-		for(Weather weather : parser.parseUrl(url)) {
-			System.out.println(weather);
-			System.out.println();
-		}
+//		XMLParser parser = new XMLParser();
+//		String url = "http://www.yr.no/sted/Norge/Oslo/Oslo/Ullevål_stadion/varsel.xml";
+//		Weather weather = parser.parseUrl(url);
+//		System.out.println(weather);
+//		System.out.println();
 	}
 
 	
@@ -72,12 +73,15 @@ public class Main {
 	 */
 	public Main() {	
 		parser = new DangerZoneParser();
+		weatherParser = new XMLParser();
 		gui = Gui.getInstance();
 		leagueUrls = new HashMap<String, String>();
 		topscorerUrls = new HashMap<String, String>();
+		weatherUrls = new HashMap<String, String>();
 		setTeamNames(new HashMap<String, String>());
 		try {
-			readTeamNames(new File("lagnavn.txt"));
+			readTextFile(new File("lagnavn.txt"), getTeamNames(), "-");
+			readTextFile(new File("stedsnavn.txt"), weatherUrls, "\t");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -129,24 +133,31 @@ public class Main {
 		gui.getTableButton().addActionListener(e);
 		gui.getPrintItem().addActionListener(e);
 		gui.getInfoItem().addActionListener(e);
+		gui.getWeatherButton().addActionListener(e);
 		
 		gui.getLeagueUrls().addItemListener(new ComboBoxEvent());
 		gui.getRoundComboBox().addItemListener(new ComboBoxEvent());
 	}
 	
 	/**
-	 * Method for reading team names and abbreviations into memory from textfile
+	 * Method for reading a text file given a specified delimited
 	 * @param File file to read
+	 * @param map the map you want to add to
+	 * @param delimiter the delimiter for splitting a string
 	 */
-	private void readTeamNames(File file) throws IOException {
+	private void readTextFile(File file, Map<String, String> map, String delimiter) throws IOException {
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader(file));
 			String line = "";
 			while((line = reader.readLine()) != null) {
-				String[] teams = line.split("-");
-				getTeamNames().put(teams[1].trim(), teams[0].trim());
-			
+				String[] items = line.split(delimiter);
+				try {
+					
+					map.put(items[1].trim(), items[0].trim());
+ 				} catch(ArrayIndexOutOfBoundsException e) {
+ 					System.out.println(line + " kunne ikke bli splittet....");
+ 				}
 			}
 
 		} catch(IOException e) {
@@ -509,6 +520,20 @@ private class EventHandler implements ActionListener {
 			} else if(e.getSource() == gui.getInfoItem()) {
 				String message = "Version: " + Main.VERSION + "\nUtviklet av: " + Main.AUTHOR + "\nSpørsmål? " + Main.EMAIL;
 				gui.showMessage(message, "Info om programmet");
+			} else if(e.getSource() == gui.getWeatherButton()) {
+				if(parser.getMatchList().size() > 0) {
+					String html = "";
+					for(Match match : parser.getMatchList()) {
+						String url = weatherUrls.get(match.getHomeTeam());
+						if(url != null) {
+							html += weatherParser.parseUrl(weatherUrls.get(match.getHomeTeam()));
+						} else {
+							System.out.println(match.getHomeTeam() + " finnes ikke i hashmap");
+						}
+					}
+					gui.getWeatherSummaryEditorPane().setText(html);
+					
+				}
 			}
 		}
 

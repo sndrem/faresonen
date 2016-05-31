@@ -55,6 +55,11 @@ public class Gui {
 	private JMenuItem printItem;
 	private JCheckBox formatMatchesChkBox;
 	private JMenuItem infoItem;
+	private JPanel mainPanel;
+	private JTabbedPane mainTab;
+	private JScrollPane summaryScrollPane;
+	private JButton weatherButton;
+	private JEditorPane weatherSummaryEditorPane;
 
 	
 	public Gui() {
@@ -80,9 +85,18 @@ public class Gui {
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		mainTab = new JTabbedPane(JTabbedPane.TOP);
+		frame.getContentPane().add(mainTab, BorderLayout.NORTH);
 		
+		mainPanel = new JPanel();
+		JScrollPane mainScrollPane = new JScrollPane(mainPanel);
+		mainTab.addTab("Hovedpanel", null, mainScrollPane, null);
+		
+		mainPanel.setLayout(new BorderLayout(0, 0));
+		
+			
 		JPanel buttonPanel = new JPanel(new GridLayout(2,2));
-		frame.getContentPane().add(buttonPanel, BorderLayout.NORTH);
+		mainPanel.add(buttonPanel, BorderLayout.NORTH);
 		
 		panel = new JPanel();
 		panel.setBorder(new TitledBorder("Hent spillere i faresonen"));
@@ -150,18 +164,19 @@ public class Gui {
 		((HTMLDocument) summaryEditorPane.getDocument()).getStyleSheet().addRule(bodyRule);
 		((HTMLDocument) dangerZoneEditorPane.getDocument()).getStyleSheet().addRule(bodyRule);
 		
-		JScrollPane summaryScrollPane = new JScrollPane(summaryEditorPane);
+		summaryScrollPane = new JScrollPane(summaryEditorPane);
 		summaryScrollPane.setViewportBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Oppsummering etter s\u00F8k", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-
+		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dangerZoneScrollPane, summaryScrollPane);
+		splitPane.setPreferredSize(new Dimension(500, 700));
+		mainPanel.add(splitPane, BorderLayout.CENTER);
 		splitPane.setAlignmentX(Component.CENTER_ALIGNMENT);
 		splitPane.setAlignmentY(Component.CENTER_ALIGNMENT);
-		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
 		splitPane.setDividerLocation(0.5);
 		splitPane.setOneTouchExpandable(true);
 		
 		JPanel searchPanel = new JPanel(new GridLayout(2,2));
-		frame.getContentPane().add(searchPanel, BorderLayout.SOUTH);
+		mainPanel.add(searchPanel, BorderLayout.SOUTH);
 		
 		searchField = new JTextField();
 		searchField.setBorder(new TitledBorder("Søk etter spillere"));
@@ -180,9 +195,11 @@ public class Gui {
 		searchPanel.add(getStatusLabel());
 		
 		frame.getRootPane().setDefaultButton(searchPlayerButton);
-		
+
+		mainTab.addTab("Værmelding", createWeatherPanel());
 		createMenuBar();
 		
+//		frame.pack();
 		frame.setVisible(true);
 	
 	}
@@ -207,6 +224,20 @@ public class Gui {
 		helpMenu.add(getInfoItem());
 		
 		frame.setJMenuBar(menuBar);
+		
+	}
+	
+	private JPanel createWeatherPanel() {
+		JPanel weatherPanel = new JPanel(new BorderLayout());
+		JPanel weatherButtonPanel = new JPanel();
+		setWeatherButton(new JButton("Hent været for dagens kamper"));
+		weatherButtonPanel.add(getWeatherButton());
+		
+		setWeatherSummaryEditorPane(new JEditorPane("text/html", ""));
+		JScrollPane weatherScrollPane = new JScrollPane(getWeatherSummaryEditorPane());
+		weatherPanel.add(weatherButtonPanel, BorderLayout.NORTH);
+		weatherPanel.add(weatherScrollPane, BorderLayout.CENTER);
+		return weatherPanel;
 	}
 	
 	/**
@@ -547,6 +578,34 @@ public class Gui {
 	 */
 	public void setInfoItem(JMenuItem infoItem) {
 		this.infoItem = infoItem;
+	}
+
+	/**
+	 * @return the weatherButton
+	 */
+	public JButton getWeatherButton() {
+		return weatherButton;
+	}
+
+	/**
+	 * @param weatherButton the weatherButton to set
+	 */
+	public void setWeatherButton(JButton weatherButton) {
+		this.weatherButton = weatherButton;
+	}
+
+	/**
+	 * @return the weatherSummaryEditorPane
+	 */
+	public JEditorPane getWeatherSummaryEditorPane() {
+		return weatherSummaryEditorPane;
+	}
+
+	/**
+	 * @param weatherSummaryEditorPane the weatherSummaryEditorPane to set
+	 */
+	public void setWeatherSummaryEditorPane(JEditorPane weatherSummaryEditorPane) {
+		this.weatherSummaryEditorPane = weatherSummaryEditorPane;
 	}
 
 }

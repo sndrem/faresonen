@@ -1,6 +1,8 @@
 package sim.tv2.no.tippeligaen.fotballxtra.parser;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,33 +32,31 @@ public class XMLParser {
 	 * @param url
 	 * @return a list of weather objects
 	 */
-	public List<Weather> parseUrl(String url) {
-		List<Weather> weatherList = new ArrayList<Weather>();
+	public Weather parseUrl(String url) {
+		Weather weather = null;
 		try {
-					
 			this.document = saxBuilder.build(url);
 			Element root = this.document.getRootElement();
 			String location = this.document.getRootElement().getChild("location").getChildText("name");
 			
 			
 			Element forecast = root.getChild("forecast");
-			for(Element elem : forecast.getChild("tabular").getChildren()) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(XMLParser.DATE_FORMAT);
+			Element elem = forecast.getChild("tabular").getChildren().get(0);
+			SimpleDateFormat dateFormat = new SimpleDateFormat(XMLParser.DATE_FORMAT);
 
-				String fromTime = elem.getAttributeValue("from");
-				String toTime = elem.getAttributeValue("to");
-				Double windSpeed = Double.parseDouble(elem.getChild("windSpeed").getAttributeValue("mps"));
-				String windExplanation = elem.getChild("windSpeed").getAttributeValue("name");
-				Double degrees = Double.parseDouble(elem.getChild("temperature").getAttributeValue("value"));
-				int symbolNumber = Integer.parseInt(elem.getChild("symbol").getAttributeValue("number"));
-				String symbolText = elem.getChild("symbol").getAttributeValue("name");
-				try {
-					weatherList.add(new Weather(location, dateFormat.parse(fromTime).toString(), dateFormat.parse(toTime).toString(), degrees, windSpeed, windExplanation, symbolNumber, symbolText));
- 				} catch(ParseException e) {
- 					e.printStackTrace();
- 				}
+			String fromTime = elem.getAttributeValue("from");
+			String toTime = elem.getAttributeValue("to");
+			Double windSpeed = Double.parseDouble(elem.getChild("windSpeed").getAttributeValue("mps"));
+			String windExplanation = elem.getChild("windSpeed").getAttributeValue("name");
+			Double degrees = Double.parseDouble(elem.getChild("temperature").getAttributeValue("value"));
+			String symbol = elem.getChild("symbol").getAttributeValue("var");
+			String symbolText = elem.getChild("symbol").getAttributeValue("name");
+			try {
+				weather = new Weather(location, dateFormat.parse(fromTime).toString(), dateFormat.parse(toTime).toString(), degrees, windSpeed, windExplanation, symbol, symbolText);
+			} catch(ParseException e) {
+				e.printStackTrace();
 			}
-			
+		
 //			XMLOutputter output = new XMLOutputter();
 //			output.output(this.document, System.out);
 //			
@@ -67,7 +67,7 @@ public class XMLParser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return weatherList;
+		return weather;
 	}
 	
 

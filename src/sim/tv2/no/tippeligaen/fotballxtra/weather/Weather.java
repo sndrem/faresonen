@@ -2,23 +2,24 @@ package sim.tv2.no.tippeligaen.fotballxtra.weather;
 
 public class Weather {
 	
-	private String fromTime, toTime, windExplanation, symbolName, location;
+	private String fromTime, toTime, windExplanation, symbol, location;
 	private Double degrees, wind;
 
 		
-	public Weather(String location, String fromTime, String toTime, Double degrees, Double wind, String windExplanation, int symbolNumber, String symbolName) {
+	public Weather(String location, String fromTime, String toTime, Double degrees, Double wind, String windExplanation, String symbol, String symbolName) {
 		setLocation(location);
 		this.fromTime = fromTime;
 		this.toTime = toTime;
 		this.setDegrees(degrees);
 		this.setWind(wind);
 		setWindExplanation(windExplanation);
-		setSymbolName(symbolName);
+		setSymbol(symbol);
 	}
 	
 	public String toString() {
-		String info = "Værvarsel for " + this.location + "\nFra " + this.fromTime + " til " + this.toTime + "\n"
-				+ "Det er meldt " + this.degrees + " celcius og det skal blåse " + this.wind + " mps. Det tilsvarer " + this.windExplanation;
+		String info = "<p>Værvarsel for " + this.location + "</p>"
+				+ "<p>Det er meldt " + this.degrees + "&#8451; og det skal blåse " + this.wind + " m/s. Det tilsvarer " + this.windExplanation + "</p>"
+				+ "<image src=\"file:sym/b38/" + this.symbol + ".png\">";
 		return info;
 	}
 
@@ -93,20 +94,6 @@ public class Weather {
 	}
 
 	/**
-	 * @return the symbolName
-	 */
-	public String getSymbolName() {
-		return getSymbolName();
-	}
-
-	/**
-	 * @param symbolName the symbolName to set
-	 */
-	public void setSymbolName(String symbolName) {
-		this.symbolName = symbolName;
-	}
-
-	/**
 	 * @return the location
 	 */
 	public String getLocation() {
@@ -118,5 +105,19 @@ public class Weather {
 	 */
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	/**
+	 * @return the symbol
+	 */
+	public String getSymbol() {
+		return symbol;
+	}
+
+	/**
+	 * @param symbol the symbol to set
+	 */
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
 	}
 }
