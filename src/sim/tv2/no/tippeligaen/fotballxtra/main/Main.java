@@ -522,17 +522,30 @@ private class EventHandler implements ActionListener {
 				gui.showMessage(message, "Info om programmet");
 			} else if(e.getSource() == gui.getWeatherButton()) {
 				if(parser.getMatchList().size() > 0) {
-					String html = "";
+					String html = "<table>"
+							+ "<thead>"
+							+ "<th align=\"left\">Sted</th>"
+							+ "<th align=\"left\">Temperatur</th>"
+							+ "<th align=\"left\">Vind</th>"
+							+ "<th align=\"left\">Symbol</th>"
+							+ "</thead>"
+							+ "<tbody>";
+					
 					for(Match match : parser.getMatchList()) {
 						String url = weatherUrls.get(match.getHomeTeam());
 						if(url != null) {
+							html += "<tr>";
 							html += weatherParser.parseUrl(weatherUrls.get(match.getHomeTeam()));
+							html += "</tr>";
 						} else {
 							System.out.println(match.getHomeTeam() + " finnes ikke i hashmap");
 						}
 					}
+					html += "</tbody>"
+						+ "</table>";
 					gui.getWeatherSummaryEditorPane().setText(html);
-					
+				} else {
+					gui.showMessage("Du må første laste dagens kamper");
 				}
 			}
 		}

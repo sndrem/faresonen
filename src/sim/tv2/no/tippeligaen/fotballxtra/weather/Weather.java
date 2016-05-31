@@ -17,9 +17,10 @@ public class Weather {
 	}
 	
 	public String toString() {
-		String info = "<p>Værvarsel for " + this.location + "</p>"
-				+ "<p>Det er meldt " + this.degrees + "&#8451; og det skal blåse " + this.wind + " m/s. Det tilsvarer " + this.windExplanation + "</p>"
-				+ "<image src=\"file:sym/b38/" + this.symbol + ".png\">";
+		String info = "<td>" + this.location + "</td>"
+				+ "<td>" + this.degrees + "&#8451;</td>"
+				+ "<td>" + this.wind + " m/s</td>"
+				+ "<td><image src=\"file:sym/b38/" + this.symbol + ".png\"></td>";
 		return info;
 	}
 
