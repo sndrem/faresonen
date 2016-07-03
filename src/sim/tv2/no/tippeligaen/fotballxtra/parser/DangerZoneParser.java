@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -147,9 +146,15 @@ public class DangerZoneParser {
 	 */
 	private void extractGoalScorers(List<Player> scorers, Element event,
 			Element timeCode) {
+		boolean status = false;
 		if(!event.text().equalsIgnoreCase(Main.NBSP)) {
 			if(event.childNodeSize() > 0) {
-				if(isGoalScorerElement(event.child(0).attr("style"))) {
+				try {
+					status = isGoalScorerElement(event.child(0).attr("style"));
+				} catch (IndexOutOfBoundsException exe) {
+					
+				}
+				if(status) {
 					String name = event.text().replace(Main.NBSP, " ");
 					Player player = new Player("", name.trim(), "", 0, 0, "");
 					int eventTime = 0;

@@ -26,7 +26,6 @@ import sim.tv2.no.tippeligaen.fotballxtra.parser.DangerZoneParser;
 import sim.tv2.no.tippeligaen.fotballxtra.parser.XMLParser;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Topscorer;
-import sim.tv2.no.tippeligaen.fotballxtra.weather.Weather;
 
 /**
  * Dette er hovedklassen for faresone-programmet.
@@ -480,6 +479,7 @@ private class EventHandler implements ActionListener {
 					nextMatches = parser.getNextMatches(leagueUrl.trim());
 					showMatches(nextMatches, gui.getFormatMatchesChkBox().isSelected());
 				} catch(IndexOutOfBoundsException exe) {
+					exe.printStackTrace();
 					gui.getInfoLabel().setText("Kunne ikke hente kamper for " + gui.getLeagueUrls().getSelectedItem());
 				} catch(IOException exe) {
 					gui.showMessage(exe.getMessage());
