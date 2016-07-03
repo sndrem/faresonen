@@ -364,9 +364,8 @@ public class Main {
 	 * @param teamNames the teamNames to set
 	 */
 	public void setTeamNames(Map<String, String> teamNames) {
-		this.teamNames = teamNames;
+		Main.teamNames = teamNames;
 	}
-
 
 
 
