@@ -168,7 +168,7 @@ public class Gui {
 		summaryScrollPane.setViewportBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Oppsummering etter s\u00F8k", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dangerZoneScrollPane, summaryScrollPane);
-		splitPane.setPreferredSize(new Dimension(500, 700));
+		splitPane.setPreferredSize(new Dimension(500, 500));
 		mainPanel.add(splitPane, BorderLayout.CENTER);
 		splitPane.setAlignmentX(Component.CENTER_ALIGNMENT);
 		splitPane.setAlignmentY(Component.CENTER_ALIGNMENT);

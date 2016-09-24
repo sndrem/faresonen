@@ -63,7 +63,7 @@ public class DangerZoneParser {
 
 	
 				// TODO Finn målscorere
-				Elements events = matchPage.select("#sd_match_stats tr");
+				Elements events = matchPage.select("#sd_header tr");
 				homeScorers = new ArrayList<Player>();
 				awayScorers = new ArrayList<Player>();
 				for(Element event : events) {
