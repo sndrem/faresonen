@@ -52,7 +52,13 @@ public class Player implements Comparable<String> {
 	}
 	
 	public String getLastName() {
-		return this.name.substring(this.name.indexOf(" "));
+		String lastName = "";
+		try {
+			lastName = this.name.substring(this.name.indexOf(" "));
+		} catch(StringIndexOutOfBoundsException e) {
+			lastName = this.name;
+		}
+		return lastName;
 	}
 	
 

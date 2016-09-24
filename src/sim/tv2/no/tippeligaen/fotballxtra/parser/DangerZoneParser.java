@@ -61,19 +61,28 @@ public class DangerZoneParser {
 				String matchUrl = "http://altomfotball.no/" + match.getElementsByClass("sd_fixtures_score").tagName("a").attr("href");
 				Document matchPage = Jsoup.connect(matchUrl).get();
 
-	
+
 				// TODO Finn målscorere
-				Elements events = matchPage.select("#sd_header tr");
-				homeScorers = new ArrayList<Player>();
-				awayScorers = new ArrayList<Player>();
-				for(Element event : events) {
-					Element homeTeamEvent = event.children().first();
-					Element timeCode = event.children().get(1);
-					Element awayTeamEvent = event.children().last();
-					extractGoalScorers(homeScorers, homeTeamEvent, timeCode);
-					extractGoalScorers(awayScorers, awayTeamEvent, timeCode);
+				Elements typeOfTable = matchPage.select("#sd_match_stats table");
+				String summary = typeOfTable.attr("summary");
+				if(summary.equalsIgnoreCase("Kampfakta")) {
+					Elements events = matchPage.select("#sd_match_stats tr");
+					homeScorers = new ArrayList<Player>();
+					awayScorers = new ArrayList<Player>();
+					for(Element event : events) {
+						Element homeTeamEvent = event.children().first();
+						Element timeCode = null;
+						try {
+							timeCode = event.children().get(1);
+						} catch(IndexOutOfBoundsException e) {
+							System.out.println(e.getMessage());
+						}
+						Element awayTeamEvent = event.children().last();
+						extractGoalScorers(homeScorers, homeTeamEvent, timeCode);
+						extractGoalScorers(awayScorers, awayTeamEvent, timeCode);
+					}
 				}
-				
+
 				String arena = extractArena(matchPage);
 				String date = extractMatchDate(matchPage);
 				String referee = extractReferee(matchPage);
@@ -82,13 +91,13 @@ public class DangerZoneParser {
 				Match matchToList = new Match(date, homeTeam, awayTeam, tournament, time.split(" ")[0], channels, round);
 				matchToList.setHomeScorers(homeScorers);
 				matchToList.setAwayScorers(awayScorers);
-				
+
 				matchToList.setArena(arena);
 				matchToList.setReferee(referee);
 				getMatchList().add(matchToList);
 
 			}
-	
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -121,14 +130,14 @@ public class DangerZoneParser {
 		String date = dateArray[dateArray.length - 3];
 		return date;
 	}
-	
+
 	private String extractArena(Document matchPage) {
 		Elements elements = matchPage.select(".sd_game_small").select(".sd_game_home");
 		String[] arenaText = null;
 		for(Element arena : elements) {
 			arenaText = arena.text().split(" ");
 		}
-		
+
 		String arena = "";
 		for(String s : arenaText) {
 			if(!s.equals("Kampen")) {
@@ -152,7 +161,7 @@ public class DangerZoneParser {
 				try {
 					status = isGoalScorerElement(event.child(0).attr("style"));
 				} catch (IndexOutOfBoundsException exe) {
-					
+
 				}
 				if(status) {
 					String name = event.text().replace(Main.NBSP, " ");
@@ -161,7 +170,7 @@ public class DangerZoneParser {
 					try {
 						eventTime = Integer.parseInt(timeCode.text());
 					} catch(NumberFormatException e) {
-						
+
 					}
 					player.getEventList().add(new Event(player.getName(), eventTime));
 					scorers.add(player);
@@ -169,7 +178,7 @@ public class DangerZoneParser {
 			}
 		}
 	}
-	
+
 	/**
 	 * Method to check if a text string contains symbols related to goals scorers from alt om fotball
 	 * @return true if the string marks a goal scorer, false otherwise
