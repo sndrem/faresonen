@@ -231,7 +231,7 @@ public class Main {
 			JOptionPane.showMessageDialog(gui.getFrame(), "Last ned spillere før du kan søke");
 		} else {
 			for(Player play : parser.getPlayers()) {
-				if(play.getName().toLowerCase().contains(searchText)) {
+				if(play.getName().toLowerCase().contains(searchText.toLowerCase())) {
 					playList.add(play);
 				} 
 			}
