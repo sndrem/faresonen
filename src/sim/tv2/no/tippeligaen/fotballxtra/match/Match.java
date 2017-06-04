@@ -1,11 +1,11 @@
 package sim.tv2.no.tippeligaen.fotballxtra.match;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import sim.tv2.no.tippeligaen.fotballxtra.main.Main;
 import sim.tv2.no.tippeligaen.fotballxtra.player.Player;
 import sim.tv2.no.tippeligaen.fotballxtra.utilities.DateFormatter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Match implements Comparable<Match> {
@@ -209,10 +209,7 @@ public class Match implements Comparable<Match> {
 		
 		info += DateFormatter.formatDate(this.matchDate) + "Avspark kl. " + this.time + " " + hasBeenPlayedOnTv + "<br>"
 				+ "<b style=\"font-size:11px;\">" + homeTeam + " - " + awayTeam + ", " + this.arena + "</b><br>"
-				+ "<p style=\"text-align:right; border-bottom: 1px solid black;\"<b>Reporter: </b><br>"
-				+ "<b>Kommentator(er): </b><br>"
-				+ "<b>Arenaekspert: </b><br>"
-				+ "<b>Studioekspert: </b><br>"
+				+ "<p style=\"text-align:right; border-bottom: 1px solid black;\""
 				+ formatReferee() + "</p>";
 		return info;
 	}

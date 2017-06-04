@@ -90,7 +90,7 @@ public class Main {
 	 */
 	private void setupLeagueUrls() {
 		// For å hente neste kamper
-		this.leagueUrls.put("Tippeligaen", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1&useFullUrl=false");
+		this.leagueUrls.put("Eliteserien", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=1&useFullUrl=false");
 		this.leagueUrls.put("OBOS-ligaen", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=2&useFullUrl=false");
 		this.leagueUrls.put("Premier League", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=230&useFullUrl=false");
 		this.leagueUrls.put("Championship", "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=231&useFullUrl=false");
@@ -101,7 +101,7 @@ public class Main {
 		}
 
 		// Url for toppscorerlister
-		this.topscorerUrls.put("Tippeligaen", "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=goals&tournamentId=1&seasonId=&teamId=&useFullUrl=false");
+		this.topscorerUrls.put("Eliteserien", "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=goals&tournamentId=1&seasonId=&teamId=&useFullUrl=false");
 		this.topscorerUrls.put("Premier League", "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=goals&tournamentId=230&seasonId=&teamId=&useFullUrl=false");
 		this.topscorerUrls.put("OBOS-ligaen", "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=goals&tournamentId=2&seasonId=&teamId=&useFullUrl=false");
 		this.topscorerUrls.put("Championship", "http://www.altomfotball.no/elementsCommonAjax.do?cmd=statistics&subCmd=goals&tournamentId=231&seasonId=&teamId=&useFullUrl=false");
@@ -319,7 +319,7 @@ public class Main {
 		// Reset round selector first
 		gui.getRoundComboBox().removeAllItems();
 		int numOfRounds = 1;
-		if(leagueType.equalsIgnoreCase("Tippeligaen")) {
+		if(leagueType.equalsIgnoreCase("Eliteserien")) {
 			numOfRounds = 30;
 		} else if(leagueType.equalsIgnoreCase("OBOS-ligaen")) {
 			numOfRounds = 30;
@@ -338,7 +338,7 @@ public class Main {
 	 * Method to return the correct url based on the league name and the round
 	 */
 	private String convertLeagueNameToUrl(String leagueName, Integer round) {
-		if(leagueName.equalsIgnoreCase("Tippeligaen")) {
+		if(leagueName.equalsIgnoreCase("Eliteserien")) {
 			return "http://www.altomfotball.no/elementsCommonAjax.do?cmd=fixturesContent&tournamentId=1&roundNo=" + round  + "&useFullUrl=false";
 		} else if (leagueName.equalsIgnoreCase("OBOS-ligaen")) {
 			return "http://www.altomfotball.no/elementsCommonAjax.do?cmd=fixturesContent&tournamentId=2&roundNo=" + round + "&useFullUrl=false";

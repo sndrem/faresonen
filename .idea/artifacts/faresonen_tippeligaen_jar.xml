@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="faresonen_tippeligaen:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/faresonen_tippeligaen_jar</output-path>
+    <root id="archive" name="faresonen_tippeligaen.jar">
+      <element id="module-output" name="faresonen_tippeligaen" />
+      <element id="extracted-dir" path="$APPLICATION_HOME_DIR$/lib/junit-4.12.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Jsoup/jsoup-1.8.1.jar" path-in-jar="/" />
+      <element id="library" level="module" name="faresonen.jar" module-name="faresonen_tippeligaen" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../jdom-2.0.6/jdom-2.0.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../jdom-2.0.6/jdom-2.0.6-junit.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../jdom-2.0.6/jdom-2.0.6-contrib.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../jdom-2.0.6/jdom-2.0.6-javadoc.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../jdom-2.0.6/jdom-2.0.6-sources.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

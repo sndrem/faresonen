@@ -101,7 +101,7 @@ public class Gui {
 		panel = new JPanel();
 		panel.setBorder(new TitledBorder("Hent spillere i faresonen"));
 		
-		getTippeligaButton = new JButton("Tippeligaen");
+		getTippeligaButton = new JButton("Eliteserien");
 		panel.add(getTippeligaButton);
 		
 		getObosligaenButton = new JButton("OBOS-ligaen");
